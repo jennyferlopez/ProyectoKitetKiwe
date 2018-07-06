@@ -1,0 +1,102 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragmentB"
+    tools:context="com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.QuizBFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cuales son las vocales aspiradas?"
+            android:id="@+id/pregTresVoc"
+            android:textSize="35sp"
+            android:textColor="@color/cardview_dark_background"/>
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/rgPreguntaTres">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text=" ãa,  ẽe,  ĩi,  ῦu"
+                android:id="@+id/rbAspirN"
+                android:textSize="30dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text=" ah,  eh,  ih,  uh"
+                android:id="@+id/rbAspirP"
+                android:textSize="30dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text=" ã,  ẽ,  ĩ,  ῦ"
+                android:id="@+id/rbAspirN2"
+                android:textSize="30dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text=" ã‘,  ẽ‘,  ĩ‘,  ῦ‘"
+                android:id="@+id/rbAspirN3"
+                android:textSize="30dp" />
+        </RadioGroup>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cuales son las vocales orales Alargadas?"
+            android:id="@+id/pregCuatroVoc"
+            android:textSize="35sp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/cardview_dark_background"
+            android:layout_gravity="center" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/rgPreguntaCuatro"
+            android:layout_gravity="center">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text=" aa,  ee,  ii,  uu"
+                android:id="@+id/rbAlargP"
+                android:textSize="30dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text=" a,  e,  i,  u"
+                android:id="@+id/rbAlargN"
+                android:textSize="30dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text=" ã,  ẽ,  ĩ,  ῦ"
+                android:id="@+id/rbAlargN2"
+                android:textSize="30dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text=" ah,  eh,  ih,  uh"
+                android:id="@+id/rbAlargN3"
+                android:textSize="30dp" />
+        </RadioGroup>
+
+    </LinearLayout>
+
+</FrameLayout>

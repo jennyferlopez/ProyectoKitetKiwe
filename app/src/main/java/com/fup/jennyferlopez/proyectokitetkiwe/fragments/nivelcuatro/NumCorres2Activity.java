@@ -42,7 +42,7 @@ public class NumCorres2Activity extends AppCompatActivity implements View.OnClic
         img_uno = (ImageView) findViewById(R.id.img_1);
         img_dos = (ImageView) findViewById(R.id.img_2);
         img_tres = (ImageView) findViewById(R.id.img_3);
-        img_cuatro = (ImageView) findViewById(R.id.img_4);
+        img_cuatro = (ImageView) findViewById(R.id.img_cuatro);
         img_cinco = (ImageView) findViewById(R.id.img_5);
         img_seis= (ImageView) findViewById(R.id.img_6);
         img_siete = (ImageView) findViewById(R.id.img_7);

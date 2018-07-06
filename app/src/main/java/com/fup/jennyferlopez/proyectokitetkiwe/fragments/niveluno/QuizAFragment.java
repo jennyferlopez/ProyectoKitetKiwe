@@ -22,7 +22,7 @@ import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
 
 import java.util.List;
 
-public class QuizAFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
+public class QuizAFragment extends Fragment implements View.OnClickListener {
 
     TextView tvPreguntaUno, tvPreguntaDos;
     RadioGroup rgPreUno, rgPreDos;
@@ -32,6 +32,7 @@ public class QuizAFragment extends Fragment implements CompoundButton.OnCheckedC
     SharedPreferences preferences;
     String userName;
     int id_user, cont_good=0, cont_fail=0, cont_intentos=0;
+    int conOB=0, conOM=0;
     public QuizAFragment() {
         // Required empty public constructor
     }
@@ -68,14 +69,15 @@ public class QuizAFragment extends Fragment implements CompoundButton.OnCheckedC
         rbNasalesN2.setTypeface(font);
         rbNasalesN3.setTypeface(font);
 
-        rbOralesP.setOnCheckedChangeListener(this);
-        rbOralesN.setOnCheckedChangeListener(this);
-        rbOralesN2.setOnCheckedChangeListener(this);
-        rbOralesN3.setOnCheckedChangeListener(this);
-        rbNasalesP.setOnCheckedChangeListener(this);
-        rbNasalesN.setOnCheckedChangeListener(this);
-        rbNasalesN2.setOnCheckedChangeListener(this);
-        rbNasalesN3.setOnCheckedChangeListener(this);
+
+        rbOralesP.setOnClickListener(this);
+        rbOralesN.setOnClickListener(this);
+        rbOralesN2.setOnClickListener(this);
+        rbOralesN3.setOnClickListener(this);
+        rbNasalesP.setOnClickListener(this);
+        rbNasalesN.setOnClickListener(this);
+        rbNasalesN2.setOnClickListener(this);
+        rbNasalesN3.setOnClickListener(this);
 
         loadDatos();
         return view;
@@ -90,74 +92,15 @@ public class QuizAFragment extends Fragment implements CompoundButton.OnCheckedC
         int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (rbOralesP.isChecked() && rbNasalesP.isChecked())
-        {
-            Puntos puntos= new Puntos(id_user, 1);
-            db.insertarPuntos(puntos);
-            Toast.makeText(getActivity(), "Correcto ", Toast.LENGTH_SHORT).show();
-            irActivity();
-        }else  if (rbNasalesP.isChecked()){
-            Puntos puntos= new Puntos(id_user, 1);
-            db.insertarPuntos(puntos);
-            cont_intentos=cont_intentos+1;
-            irActivity();
-            Toast.makeText(getActivity(), "Muy bien! ", Toast.LENGTH_SHORT).show();
-            enabledNasales();
-        }else  if (rbOralesP.isChecked()){
-            Puntos puntos= new Puntos(id_user, 1);
-            db.insertarPuntos(puntos);
-            cont_good=cont_good+1;
-            irActivity();
-            Toast.makeText(getActivity(), "Muy bien! ", Toast.LENGTH_SHORT).show();
-            enabledOrales();
-        }else if (rbOralesN3.isChecked()){
-            enabledOrales();
-            cont_good=cont_good+1;
-            Toast.makeText(getActivity(), "Fallaste ", Toast.LENGTH_SHORT).show();
-            irActivity();
-        }else if (rbOralesN2.isChecked() ){
-            enabledOrales();
-            cont_good=cont_good+1;
-            Toast.makeText(getActivity(), "Fallaste ", Toast.LENGTH_SHORT).show();
-            irActivity();
-        }else if (rbOralesN.isChecked()){
-            enabledOrales();
-            cont_good=cont_good+1;
-            Toast.makeText(getActivity(), "Fallaste ", Toast.LENGTH_SHORT).show();
-            irActivity();
-        }else if (rbNasalesN3.isChecked()){
-            enabledNasales();
-            cont_intentos=cont_intentos+1;
-            Toast.makeText(getActivity(), "Fallaste ", Toast.LENGTH_SHORT).show();
-            irActivity();
-        }else if (rbNasalesN2.isChecked()){
-            enabledNasales();
-            cont_intentos=cont_intentos+1;
-            Toast.makeText(getActivity(), "Fallaste ", Toast.LENGTH_SHORT).show();
-            irActivity();
-        }else if (rbNasalesN.isChecked()){
-            enabledNasales();
-            cont_intentos=cont_intentos+1;
-            Toast.makeText(getActivity(), "Fallaste ", Toast.LENGTH_SHORT).show();
-            irActivity();
-        }
-
-
-
-    }
 
     private void irActivity() {
-        if (cont_intentos>=1 && cont_good>=1){
-            FragmentTransaction trans = getFragmentManager().beginTransaction();
-            trans.replace(R.id.fragmentA, new QuizBFragment());
-            trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            trans.addToBackStack(null);
-            trans.commit();
-            ocultarDatos();
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        trans.replace(R.id.fragmentA, new QuizBFragment());
+        trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        trans.addToBackStack(null);
+        trans.commit();
+        ocultarDatos();
 
-        }
     }
 
     private void ocultarDatos() {
@@ -189,5 +132,35 @@ public class QuizAFragment extends Fragment implements CompoundButton.OnCheckedC
         rbNasalesN2.setEnabled(false);
         rbNasalesN3.setEnabled(false);
         rgPreDos.setEnabled(false);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id =v.getId();
+        if (id== R.id.rbOralesP){
+            conOB=1;
+            enabledOrales();
+        }else if (id== R.id.rbOralesN || id== R.id.rbOralesN2 || id== R.id.rbOralesN3) {
+            enabledOrales();
+            cont_intentos=cont_intentos+1;
+            conOM=1;
+        }else if (id== R.id.rbNasalesP ){
+            Puntos puntos= new Puntos(id_user, 1);
+            db.insertarPuntos(puntos);
+            if (conOM==1 || conOB==1){
+                irActivity();
+            }
+        }else if (id== R.id.rbNasalesN || id== R.id.rbNasalesN2 || id== R.id.rbNasalesN3){
+            enabledNasales();
+            if (conOM==1 || conOB==1) {
+                irActivity();
+            }
+        }if (conOM==1 && id== R.id.rbNasalesP)
+        {
+            enabledNasales();
+            irActivity();
+
+        }
+
     }
 }

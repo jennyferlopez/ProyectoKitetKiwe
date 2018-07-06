@@ -16,9 +16,14 @@ import android.widget.TextView;
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
 
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +38,7 @@ public class VocalesDosFragment extends Fragment implements View.OnClickListener
     int id_user;
     GestorBd db;
 
+    ServicioUsuario servicioUsuario;
     ImageView v_glotal_a, v_glotal_e, v_glotal_i, v_glotal_u, n_glotal_a, n_glotal_e, n_glotal_i, n_glotal_u;
     public VocalesDosFragment() {
         // Required empty public constructor
@@ -74,16 +80,24 @@ public class VocalesDosFragment extends Fragment implements View.OnClickListener
         tv_title.setTypeface(font);
 
         loadPreference();
-        cargarTextV();
 
+        loadRealm();
+        actualizarPuntos();
         return view;
     }
-    private void cargarTextV() {
-        id_user =db.obtenerId(userName);
-        List<Puntos> pts=db.sumaPuntos(id_user);
-        pts=db.sumaPuntos(id_user);
-        int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-        tv_puntos.setText(""+ p);
+
+    private void loadRealm() {
+        Realm.init(getActivity());
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+
     }
     private void loadPreference() {
         preferences = getActivity().getSharedPreferences(Preference.PREFERENCE_NAME, Activity.MODE_PRIVATE);
@@ -133,6 +147,14 @@ public class VocalesDosFragment extends Fragment implements View.OnClickListener
         }else if (v.getId() == R.id.n_glotal_u) {
             MediaPlayer mp = MediaPlayer.create(getActivity(), R.raw.n_glotal_u);
             mp.start();
+        }
+    }
+    private void actualizarPuntos() {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p);
         }
     }
 }

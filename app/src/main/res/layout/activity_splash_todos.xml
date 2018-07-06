@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fondo"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    tools:context="com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.VocalesUnoFragment">
+
+
+    <ImageView
+        android:id="@+id/ic_avatarNiveles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/textInstruccion"
+            android:layout_width="match_parent"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/img_primera"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+        <TextView
+            android:id="@+id/textInstruccionDos"
+            android:layout_width="match_parent"
+            android:layout_marginRight="50dp"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/img_segunda"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+</LinearLayout>
+
+
+</LinearLayout>

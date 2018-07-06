@@ -8,13 +8,17 @@ import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveldos.Nivel23Activity;
+import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.VocalesColiActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
@@ -26,7 +30,7 @@ public class ColorCorresActivity extends AppCompatActivity implements View.OnCli
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView tv_puntos;
-    ImageView icAvatarNiveles;
+    ImageView icAvatarNiveles,imgAyuda;
     TextView tv_title;
     int id_user;
     GestorBd db;
@@ -51,6 +55,8 @@ public class ColorCorresActivity extends AppCompatActivity implements View.OnCli
         img_gris = (ImageView) findViewById(R.id.img_gris);
         img_morado = (ImageView) findViewById(R.id.img_morado);
 
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
 
         img_naranja.setOnClickListener(this);
         img_negro.setOnClickListener(this);
@@ -71,6 +77,20 @@ public class ColorCorresActivity extends AppCompatActivity implements View.OnCli
 
         loadPreference();
         cargarTextV();
+        loadSplash();
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Selecciona el color de los cuadros");
+        b.putString("text_dos", "y pinta la imagen");
+        b.putInt("img_uno", R.drawable.txt_negro);
+        b.putInt("img_dos", R.drawable.img_naranja);
+        Intent irActivity= new Intent(ColorCorresActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
     }
     private void cargarTextV() {
         id_user =db.obtenerId(userName);
@@ -104,7 +124,9 @@ public class ColorCorresActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.img_naranja) {
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }else if (v.getId() == R.id.img_naranja) {
             paint_naranja.setBackgroundResource(R.drawable.pin_naranja);
             Thread timerThread = new Thread(){
                 public void run(){

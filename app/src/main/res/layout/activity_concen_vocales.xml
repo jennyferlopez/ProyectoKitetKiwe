@@ -55,7 +55,6 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="90dp"
-
             android:background="@drawable/enc_pareja"
             android:id="@+id/imageView8"
             android:layout_below="@id/linearLayout2"
@@ -63,6 +62,16 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             />
+
+        <ImageView
+            android:id="@+id/img_ayuda"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="24dp"
+            android:layout_alignEnd="@+id/ic_avatarNiveles"
+            android:layout_alignRight="@+id/ic_avatarNiveles"
+            android:layout_below="@+id/ic_avatarNiveles"
+            android:src="@drawable/ayuda" />
     </RelativeLayout>
     <GridView
         android:layout_width="match_parent"

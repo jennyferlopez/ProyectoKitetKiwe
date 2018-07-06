@@ -20,6 +20,7 @@ import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveldos.Nivel22Activit
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveldos.Nivel23Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveldos.Nivel24Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveldos.Nivel2Activity;
+import com.fup.jennyferlopez.proyectokitetkiwe.fragments.nivelseis.Nivel6Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveltres.Nivel32Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveltres.Nivel3Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveltres.Niveles31Activity;
@@ -118,6 +119,8 @@ public class SplashActivity extends AppCompatActivity {
                 ir = new Intent(this, Nivel44Activity.class);
             }else if (activity.equals("Nivel5Activity")) {
                 ir = new Intent(this, Nivel5Activity.class);
+            }else if (activity.equals("Nivel6Activity")) {
+                ir = new Intent(this, Nivel6Activity.class);
             }
             startActivity(ir);
         }else {

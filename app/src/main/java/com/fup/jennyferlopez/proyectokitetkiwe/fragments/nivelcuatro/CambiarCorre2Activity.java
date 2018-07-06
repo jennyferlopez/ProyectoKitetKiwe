@@ -88,7 +88,7 @@ public class CambiarCorre2Activity extends AppCompatActivity implements View.OnC
 
     private void cargarPuntos() {
         if (cont_good ==4) {
-            Intent irMenu = new Intent(getApplication(), QuizCuatroActivity.class);
+            Intent irMenu = new Intent(getApplication(), QuizFinal4Activity.class);
             startActivity(irMenu);
             finish();
         }if (cont_good==4 && cont_intentos ==4){

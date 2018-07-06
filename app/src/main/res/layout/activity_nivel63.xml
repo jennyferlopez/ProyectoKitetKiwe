@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/escenario_seist"
+    android:layout_height="match_parent"
+    tools:context="com.fup.jennyferlopez.proyectokitetkiwe.fragments.nivelcuatro.Nivel44Activity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/cinta_niveles"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout2">
+
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_oros"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="35dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="x 0"
+            android:id="@+id/tv_puntos"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/cardview_dark_background"/>
+
+    </LinearLayout>
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/ic_avatarNiveles"
+        android:layout_alignRight="@+id/linearLayout2"
+        android:layout_alignEnd="@+id/linearLayout2" />
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="120dp"
+        android:id="@+id/correAvatar"
+        android:layout_marginBottom="303dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/ic_avatarNiveles"
+        android:layout_toStartOf="@+id/ic_avatarNiveles" />
+
+
+</RelativeLayout>

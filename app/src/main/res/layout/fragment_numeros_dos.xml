@@ -112,7 +112,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Set"
+                        android:text="Sat"
                         android:layout_gravity="center_horizontal"
                         android:id="@+id/num_siete"
                         android:layout_marginLeft="15dp"

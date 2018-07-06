@@ -53,9 +53,9 @@
             android:layout_alignRight="@+id/linearLayout2"
             android:layout_alignEnd="@+id/linearLayout2" />
         <ImageView
-            android:layout_width="250dp"
+            android:layout_width="450dp"
             android:layout_gravity="center_horizontal"
-            android:layout_height="75dp"
+            android:layout_height="100dp"
             android:background="@drawable/comp_palabra"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" />
@@ -102,9 +102,9 @@
                         android:id="@+id/dos" />
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="80dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_height="100dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="30dp"
                         android:layout_weight="0.3"
                         android:src="@drawable/ee_r"
                         android:padding="15dp"

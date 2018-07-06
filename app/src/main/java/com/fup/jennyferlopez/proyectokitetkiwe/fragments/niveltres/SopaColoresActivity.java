@@ -7,6 +7,8 @@ import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.nivelcuatro.Nivel4Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveldos.CompTren2Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveldos.Nivel23Activity;
@@ -33,18 +36,7 @@ public class SopaColoresActivity extends AppCompatActivity implements View.OnCli
     TextView tv_title;
     int id_user;
     GestorBd db;
-    GridView sopaLetras;
-    ImageView imgToast, img_t, img_th, img_tx, img_c, img_huevo;
-    private final String[] items = new String[]{ "c","x", "k", "i", "t", "x", "b",
-                                                  "d","b","e","h","t","ç","ĕ","y",
-                                                  "ç","ç","n","a","w","y","k","d",
-                                                  "x","e","o","m","k","a","h","u",
-                                                  "i","i","r","u","n","p","u","y",
-                                                  "h","y","t","x","u","ç","ç","x",
-                                                  "m","b","s","s","i","r","ĕ","ç",
-                                                  "e","l","d","h","s","l","t","ῦ",
-                                                  "a","m","i","x","l","ç","m","k","p"
-    };
+    ImageView  img_t, img_th, img_tx, img_c, img_huevo, imgAyuda;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +61,29 @@ public class SopaColoresActivity extends AppCompatActivity implements View.OnCli
         tv_puntos.setTypeface(font);
         tv_title.setTypeface(font);
 
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
         img_t.setOnClickListener(this);
         img_th.setOnClickListener(this);
         img_tx.setOnClickListener(this);
         img_c.setOnClickListener(this);
         loadPreference();
         cargarTextV();
+
+        loadSplash();
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Selecciona la letra faltante ");
+        b.putString("text_dos", "para completar el color");
+        b.putInt("img_uno", R.drawable.img_t2);
+        b.putInt("img_dos", R.drawable.img_huevo_verde);
+        Intent irActivity= new Intent(SopaColoresActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
     }
     private void cargarTextV() {
         id_user =db.obtenerId(userName);
@@ -107,7 +116,7 @@ public class SopaColoresActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void ircuatro(View view) {
-        Intent irMenu = new Intent(getApplication(), QuizTresActivity.class);
+        Intent irMenu = new Intent(getApplication(), QuizFinal3Activity.class);
         startActivity(irMenu);
         finish();
     }
@@ -115,7 +124,9 @@ public class SopaColoresActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         int id=v.getId();
-        if (id==R.id.img_c2){
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }else if (id==R.id.img_c2){
             img_huevo.setBackgroundResource(R.drawable.img_huevo_verde_r);
             Thread timerThread = new Thread(){
                 public void run(){

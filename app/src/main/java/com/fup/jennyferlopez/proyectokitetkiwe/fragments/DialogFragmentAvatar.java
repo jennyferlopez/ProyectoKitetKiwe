@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class DialogFragmentAvatar extends DialogFragment implements View.OnClickListener {
 
@@ -24,8 +31,10 @@ public class DialogFragmentAvatar extends DialogFragment implements View.OnClick
     Button btnGuardar, btn_mujer, btn_hombre;
     private SharedPreferences.Editor editor;
     private SharedPreferences preferences;
-    String avatarSeleccionado, genero_avatar;
+    String avatarSeleccionado, genero_avatar, userName;
     TextView escojer;
+
+    ServicioUsuario servicioUsuario;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,8 +75,24 @@ public class DialogFragmentAvatar extends DialogFragment implements View.OnClick
 
         avatar.setBackgroundResource(R.drawable.avatar_blanco);
 
+        loadRealm();
         return view;
     }
+
+    private void loadRealm() {
+        Realm.init(getActivity());
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -78,11 +103,9 @@ public class DialogFragmentAvatar extends DialogFragment implements View.OnClick
             im_tres.setVisibility(View.VISIBLE);
             btnGuardar.setVisibility(View.VISIBLE);
             btnGuardar.setBackgroundResource(R.drawable.btn_mujer);
-
             im_uno.setBackgroundResource(R.drawable.ic_nina_uno);
             im_dos.setBackgroundResource(R.drawable.ic_nina_dos);
             im_tres.setBackgroundResource(R.drawable.ic_nina_tres);
-
             editor.putString(Preference.GENERO_AVATAR, "1");
             editor.commit();
 
@@ -120,19 +143,14 @@ public class DialogFragmentAvatar extends DialogFragment implements View.OnClick
         } else if (id == R.id.img_tres && genero_avatar.equals("1")) {
             avatar.setBackgroundResource(R.drawable.nina_tres);
             avatarSeleccionado="6";
-/*        } else if (rbHombre.isChecked()) {
-            im_uno.setBackgroundResource(R.drawable.a_nino_uno);
-            im_dos.setBackgroundResource(R.drawable.a_nino_dos);
-            im_tres.setBackgroundResource(R.drawable.a_nino_tres);
-        } else if (rbMujeres.isChecked()) {
-            im_uno.setBackgroundResource(R.drawable.a_nina_uno);
-            im_dos.setBackgroundResource(R.drawable.a_nina_dos);
-            im_tres.setBackgroundResource(R.drawable.a_nina_tres);
-        }
-        */}if (id == R.id.btn_guardarAvatar){
-            editor.putString(Preference.AVATAR_SEECCIONADO, avatarSeleccionado);
-            editor.commit();
-            dismiss();
+        }if (id == R.id.btn_guardarAvatar){
+            userName =preferences.getString(Preference.USER_NAME, "");
+            User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+            if (usuario_por_id!=null) {
+                servicioUsuario.actualizarUsuarioNombre(usuario_por_id,"","","",avatarSeleccionado,"",0);
+                dismiss();
+            }
+
             //getActivity().recreate();
         }
 

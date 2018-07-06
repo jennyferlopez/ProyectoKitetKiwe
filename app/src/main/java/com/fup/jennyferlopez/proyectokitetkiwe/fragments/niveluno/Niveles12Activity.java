@@ -16,9 +16,14 @@ import com.fup.jennyferlopez.proyectokitetkiwe.activities.MenuActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.activities.NivelesActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
 
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class Niveles12Activity extends AppCompatActivity implements View.OnClickListener{
     ImageView imgAvatarS;
@@ -26,14 +31,13 @@ public class Niveles12Activity extends AppCompatActivity implements View.OnClick
     ImageView correAvaatr, icAvatarNiveles;
     SharedPreferences preferences;
     String avatarSeleccionado;
-    GestorBd db;
+    ServicioUsuario servicioUsuario;
     String userName, activity, pass, pathImg;
     int id_user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_niveles12);
-        db=new GestorBd(getApplication());
         icAvatarNiveles = (ImageView) findViewById(R.id.ic_avatarNiveles);
         correAvaatr = (ImageView) findViewById(R.id.correAvatar);
         tv_puntos = (TextView) findViewById(R.id.tv_puntos);
@@ -43,22 +47,32 @@ public class Niveles12Activity extends AppCompatActivity implements View.OnClick
         correAvaatr.setOnClickListener(this);
 
         loadPreference();
-        cargarTextV();
+        loadRealm();
         actualizarActivity();
     }
-    private void cargarTextV() {
-        id_user =db.obtenerId(userName);
-        List<Puntos> pts=db.sumaPuntos(id_user);
-        pts=db.sumaPuntos(id_user);
-        int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-        tv_puntos.setText(""+ p);
+
+    private void loadRealm() {
+        Realm.init(this);
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+
     }
+
     private void actualizarActivity() {
-        activity= "Niveles12Activity";
         userName =preferences.getString(Preference.USER_NAME, "");
-        id_user =preferences.getInt(Preference.USER_ID, 0);
-        pass =preferences.getString(Preference.PASSWORD, "");
-        db.actualizarActivity(userName , pass, avatarSeleccionado, activity, id_user);
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+            servicioUsuario.actualizaractivity(usuario_por_id,"Niveles12Activity");
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p);
+        }
     }
 
     private void loadPreference() {

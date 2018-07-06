@@ -16,9 +16,14 @@ import android.widget.TextView;
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
 
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +40,7 @@ public class ConsPalatalesFragment extends Fragment implements View.OnClickListe
     int id_user;
     ImageView con_px, con_nx, con_tx, con_bx, con_cx, con_dx, con_kx, con_gx, con_vx, con_jx, con_lx, con_zx;
 
+    ServicioUsuario servicioUsuario;
     public ConsPalatalesFragment() {
         // Required empty public constructor
     }
@@ -81,18 +87,24 @@ public class ConsPalatalesFragment extends Fragment implements View.OnClickListe
         db=new GestorBd(getContext());
 
         loadPreference();
-        cargarTextV();
-
+        loadRealm();
+        actualizarPuntos();
         return view;
     }
-    private void cargarTextV() {
-        id_user =db.obtenerId(userName);
-        List<Puntos> pts=db.sumaPuntos(id_user);
-        pts=db.sumaPuntos(id_user);
-        int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-        tv_puntos.setText(""+ p);
-    }
 
+    private void loadRealm() {
+        Realm.init(getActivity());
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+
+    }
 
     private void loadPreference() {
         preferences = getActivity().getSharedPreferences(Preference.PREFERENCE_NAME, Activity.MODE_PRIVATE);
@@ -155,6 +167,14 @@ public class ConsPalatalesFragment extends Fragment implements View.OnClickListe
         }else if (v.getId() == R.id.c_pal_zx) {
             MediaPlayer mp = MediaPlayer.create(getActivity(), R.raw.c_palatales_zx);
             mp.start();
+        }
+    }
+    private void actualizarPuntos() {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p);
         }
     }
 

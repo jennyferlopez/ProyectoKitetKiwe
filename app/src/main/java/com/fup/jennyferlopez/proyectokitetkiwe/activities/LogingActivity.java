@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -19,8 +20,15 @@ import android.widget.Toast;
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.Niveles11Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Usuario;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
+import static io.realm.internal.SyncObjectServerFacade.getApplicationContext;
 
 
 public class LogingActivity extends AppCompatActivity {
@@ -33,6 +41,8 @@ public class LogingActivity extends AppCompatActivity {
     String activity;
     String pathimg;
     private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+    ServicioUsuario servicioUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,32 +73,52 @@ public class LogingActivity extends AppCompatActivity {
         preferences =  getSharedPreferences(Preference.PREFERENCE_NAME, Context.MODE_PRIVATE);
         activity= String.valueOf(LogingActivity.class);
         pathimg=String.valueOf(R.drawable.avatar_blanco);
+        loadRealm();
     }
 
-    public void irMenu(View view) {
-        String user=edit_User.getText().toString();
-        String pass=edit_Password.getText().toString();
-        int id_user=db.obtenerId(user);
-            String val = db.validacioUser(user);
-            if (val == null) {
-                Toast.makeText(getApplicationContext(), "No existe el registro", Toast.LENGTH_SHORT).show();
-            } else if (val.equals(pass)) {
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString(Preference.USER_NAME, user);
-                editor.putInt(Preference.USER_ID, id_user);
-                editor.putString(Preference.PASSWORD, pass);
-                editor.putBoolean(Preference.IS_LOGGED, true);
-                editor.apply();
-                db.actualizarActivity(user , pass, pathimg, activity, id_user);
-            Intent irMenu=new Intent(this, MenuActivity.class);
-            irMenu.putExtra("cedula", user);
-            startActivity(irMenu);
+    private void loadRealm() {
+        Realm.init(this);
 
-             finish();
-            } else {
-                Toast.makeText(getApplicationContext(), "la contraseña es incorrecta", Toast.LENGTH_SHORT).show();
-            }
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+        User[] usuarios = servicioUsuario.obtenerUsuarios();
+
+        for ( int i = 0; i< usuarios.length; i++){
+            Log.d("RESULTADOS",usuarios[i].getNombreUsuario());
         }
+
+    }
+
+    public void cancelar(View view) {
+        Intent irLogin= new Intent(this, LogingActivity.class);
+        startActivity(irLogin);
+        finish();
+    }
+    public void irMenu(View view) {
+        String user = edit_User.getText().toString();
+        String pass = edit_Password.getText().toString();
+
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(user);
+        if (usuario_por_id==null) {
+            Toast.makeText(getApplicationContext(), "El usuario no existe", Toast.LENGTH_SHORT).show();
+        } else   if (usuario_por_id.getContraseña().equals(pass)){
+            preferences = getApplicationContext().getSharedPreferences(Preference.PREFERENCE_NAME, Context.MODE_PRIVATE);
+            editor = preferences.edit();
+            editor.putString(Preference.USER_NAME, user);
+            editor.apply();
+            Intent irMenu=new Intent(this, MenuActivity.class);
+            startActivity(irMenu);
+            finish();
+        }else {
+            Toast.makeText(getApplicationContext(), "la contraseña es incorrecta", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

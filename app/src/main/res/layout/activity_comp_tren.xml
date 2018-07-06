@@ -52,77 +52,90 @@
             android:layout_alignParentTop="true"
             android:layout_alignRight="@+id/linearLayout2"
             android:layout_alignEnd="@+id/linearLayout2" />
+
+        <ImageView
+            android:id="@+id/img_ayuda"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="24dp"
+            android:src="@drawable/ayuda" />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:background="@drawable/letra_faltante"
             android:id="@+id/imageView8"
-            android:onClick="irDos"
             android:layout_below="@id/linearLayout2"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="70dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             />
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="0.75">
+        android:layout_marginTop="20dp"
+        android:layout_weight="0.75"
+        android:orientation="vertical">
+
         <ImageView
+            android:id="@+id/img_parca"
             android:layout_width="match_parent"
             android:layout_height="210dp"
-            android:id="@+id/img_parca"
             android:layout_marginBottom="30dp"
-            android:background="@drawable/img_huevos_uno"/>
+            android:background="@drawable/img_huevos_uno" />
+
         <ImageView
-            android:layout_width="72dp"
-            android:layout_height="95dp"
             android:id="@+id/img_huevoCol"
+            android:layout_width="105dp"
+            android:layout_height="120dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="225dp" />
+            android:layout_marginLeft="46dp"
+            android:layout_marginStart="56dp"
+            android:layout_toEndOf="@+id/img_t2"
+            android:layout_toRightOf="@+id/img_t2" />
 
         <ImageView
-            android:layout_width="120dp"
-            android:layout_height="130dp"
             android:id="@+id/img_t2"
-            android:background="@drawable/img_t2"
-            android:layout_below="@+id/img_parca"
+            android:layout_width="120dp"
+            android:layout_height="130dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_below="@+id/img_parca"
             android:layout_marginLeft="40dp"
-            android:layout_marginStart="40dp" />
+            android:layout_marginStart="40dp"
+            android:background="@drawable/img_t2" />
 
         <ImageView
-            android:layout_width="120dp"
-            android:layout_height="130dp"
             android:id="@+id/img_th2"
-            android:background="@drawable/img_th2"
+            android:layout_width="120dp"
+            android:layout_height="130dp"
             android:layout_below="@+id/img_t2"
+            android:layout_toEndOf="@+id/img_t2"
             android:layout_toRightOf="@+id/img_t2"
-            android:layout_toEndOf="@+id/img_t2" />
+            android:background="@drawable/img_th2" />
 
         <ImageView
-            android:layout_width="120dp"
-            android:layout_height="130dp"
             android:id="@+id/img_tx2"
-            android:background="@drawable/img_tx2"
-            android:layout_alignTop="@id/img_th2"
-            android:layout_toRightOf="@id/img_th2"
-            android:layout_marginLeft="30dp"
-            android:layout_toEndOf="@id/img_huevoCol" />
-
-        <ImageView
             android:layout_width="120dp"
             android:layout_height="130dp"
+            android:layout_alignTop="@id/img_th2"
+            android:layout_marginLeft="30dp"
+            android:layout_toEndOf="@id/img_huevoCol"
+            android:layout_toRightOf="@id/img_th2"
+            android:background="@drawable/img_tx2" />
+
+        <ImageView
             android:id="@+id/img_txh2"
-            android:background="@drawable/img_txh2"
+            android:layout_width="120dp"
+            android:layout_height="130dp"
             android:layout_above="@+id/img_tx2"
+            android:layout_toEndOf="@+id/img_tx2"
             android:layout_toRightOf="@+id/img_tx2"
-            android:layout_toEndOf="@+id/img_tx2" />
+            android:background="@drawable/img_txh2" />
     </RelativeLayout>
 
     <ImageView

@@ -93,7 +93,7 @@ public class HuevosCol2Activity extends AppCompatActivity implements View.OnClic
     }
 
     public void ircuatro(View view) {
-        Intent irMenu = new Intent(getApplication(), QuizTresActivity.class);
+        Intent irMenu = new Intent(getApplication(), QuizFinal3Activity.class);
         startActivity(irMenu);
         finish();
     }

@@ -17,9 +17,14 @@ import com.fup.jennyferlopez.proyectokitetkiwe.activities.MenuActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveltres.ConcenColoresActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
 
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class Nivel4Activity extends AppCompatActivity implements View.OnClickListener{
 
@@ -28,12 +33,11 @@ public class Nivel4Activity extends AppCompatActivity implements View.OnClickLis
     ImageView correAvaatr, icAvatarNiveles;
     TextView tv_puntos;String userName, activity, pass, pathImg;
     int id_user;
-    GestorBd db;
+    ServicioUsuario servicioUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nivel4);
-        db=new GestorBd(getApplication());
         icAvatarNiveles = (ImageView) findViewById(R.id.ic_avatarNiveles);
         correAvaatr = (ImageView) findViewById(R.id.correAvatar);
         tv_puntos = (TextView) findViewById(R.id.tv_puntos);
@@ -43,17 +47,24 @@ public class Nivel4Activity extends AppCompatActivity implements View.OnClickLis
         correAvaatr.setOnClickListener(this);
 
         loadPreference();
-        cargarTextV();
+        loadRealm();
         actualizarActivity();
-    }
-    private void cargarTextV() {
-        id_user =db.obtenerId(userName);
-        List<Puntos> pts=db.sumaPuntos(id_user);
-        pts=db.sumaPuntos(id_user);
-        int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-        tv_puntos.setText(""+ p);
+        SumarPuntos(3);
     }
 
+    private void loadRealm() {
+        Realm.init(this);
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+
+    }
     private void loadPreference() {
         preferences = getSharedPreferences(Preference.PREFERENCE_NAME, Activity.MODE_PRIVATE);
         avatarSeleccionado = preferences.getString(Preference.AVATAR_SEECCIONADO, "");
@@ -92,13 +103,26 @@ public class Nivel4Activity extends AppCompatActivity implements View.OnClickLis
            // Toast.makeText(this, "nivel cuatro", Toast.LENGTH_SHORT).show();
         }
     }
-    private void actualizarActivity() {
-        activity= "Nivel4Activity";
+    private void SumarPuntos(int puntos) {
         userName =preferences.getString(Preference.USER_NAME, "");
-        id_user =preferences.getInt(Preference.USER_ID, 0);
-        pass =preferences.getString(Preference.PASSWORD, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
 
-        db.actualizarActivity(userName , pass, avatarSeleccionado, activity, id_user);
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+
+            servicioUsuario.actualizarPuntos(usuario_por_id,puntos+p);
+            int p1=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p1);
+        }
+    }
+    private void actualizarActivity() {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+            servicioUsuario.actualizaractivity(usuario_por_id,"Nivel4Activity");
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p);
+        }
     }
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

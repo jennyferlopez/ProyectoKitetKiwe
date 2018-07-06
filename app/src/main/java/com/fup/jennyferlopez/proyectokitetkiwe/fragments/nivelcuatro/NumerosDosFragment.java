@@ -19,9 +19,14 @@ import com.fup.jennyferlopez.proyectokitetkiwe.R;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveltres.Niveles31Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
 
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,7 +38,7 @@ public class NumerosDosFragment extends Fragment implements View.OnClickListener
     ImageView icAvatarNiveles;
     TextView tv_title, num_seis, num_siete, num_ocho, num_nueve, num_diez;
     int idUsuario;
-    GestorBd db;
+    ServicioUsuario servicioUsuario;
     int id_user;
     ImageView n_seis, n_siete, n_ocho, n_nueve, n_diez;
     Button btnSiguiente;
@@ -41,7 +46,6 @@ public class NumerosDosFragment extends Fragment implements View.OnClickListener
     public NumerosDosFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,19 +92,24 @@ public class NumerosDosFragment extends Fragment implements View.OnClickListener
         num_nueve.setTypeface(font);
         num_diez.setTypeface(font);
 
-        db=new GestorBd(getContext());
-
         loadPreference();
-        cargarTextV();
-
+        loadRealm();
+        actualizarPuntos();
         return view;
     }
-    private void cargarTextV() {
-        id_user =db.obtenerId(userName);
-        List<Puntos> pts=db.sumaPuntos(id_user);
-        pts=db.sumaPuntos(id_user);
-        int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-        tv_puntos.setText(""+ p);
+
+    private void loadRealm() {
+        Realm.init(getActivity());
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+
     }
 
 
@@ -147,4 +156,12 @@ public class NumerosDosFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    private void actualizarPuntos() {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p);
+        }
+    }
 }

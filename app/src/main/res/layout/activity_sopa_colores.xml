@@ -53,6 +53,15 @@
             android:layout_alignRight="@+id/linearLayout2"
             android:layout_alignEnd="@+id/linearLayout2" />
 
+
+        <ImageView
+            android:id="@+id/img_ayuda"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignEnd="@+id/ic_avatarNiveles"
+            android:layout_alignRight="@+id/ic_avatarNiveles"
+            android:layout_below="@+id/ic_avatarNiveles"
+            android:src="@drawable/ayuda" />
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"

@@ -11,12 +11,16 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveldos.Nivel22Activity;
+import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveltres.ColorCorresActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
@@ -28,7 +32,7 @@ public class SonCorresNumActivity extends AppCompatActivity implements View.OnCl
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView tv_puntos;
-    ImageView icAvatarNiveles, ic_play;
+    ImageView icAvatarNiveles, ic_play,imgAyuda;
     ImageView img_uno, img_dos, img_tres,img_cuatro, img_cinco, img_seis, img_siete, img_ocho, img_nueve, img_diez;
     int i =0, num;
     int sonidos[]= new int[10];
@@ -71,7 +75,8 @@ public class SonCorresNumActivity extends AppCompatActivity implements View.OnCl
         sonidos[7]= R.raw.ocho;
         sonidos[8]= R.raw.siete;
         sonidos[9]= R.raw.tres;
-
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
         ic_play.setOnClickListener(this);
         img_uno.setOnClickListener(this);
         img_dos.setOnClickListener(this);
@@ -85,6 +90,20 @@ public class SonCorresNumActivity extends AppCompatActivity implements View.OnCl
         img_diez.setOnClickListener(this);
         loadPreference();
         cargarTextV();
+        loadSplash();
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Selecciona la imagen de sonido");
+        b.putString("text_dos", "y seleciona el numero correspondiente");
+        b.putInt("img_uno", R.drawable.con_play);
+        b.putInt("img_dos", R.drawable.img_uno);
+        Intent irActivity= new Intent(SonCorresNumActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
     }
     private void cargarTextV() {
         id_user =db.obtenerId(userName);
@@ -117,7 +136,9 @@ public class SonCorresNumActivity extends AppCompatActivity implements View.OnCl
     }
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.con_play) {
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }else if (v.getId() == R.id.con_play) {
             MediaPlayer mp = MediaPlayer.create(this, sonidos[i]);
             mp.start();
             num=1;

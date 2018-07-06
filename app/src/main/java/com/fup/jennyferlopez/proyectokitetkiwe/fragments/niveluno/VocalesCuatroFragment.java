@@ -18,9 +18,14 @@ import android.widget.TextView;
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
 
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,9 +39,10 @@ public class VocalesCuatroFragment extends Fragment implements View.OnClickListe
     TextView tv_title;
     Button btnSiguiente;
     int id_user;
-    GestorBd db;
     private static final String TAG = "VocalesCuatroFragment";
     ImageView v_asp_a, v_asp_e, v_asp_i, v_asp_u, n_asp_a, n_asp_e, n_asp_i, n_asp_u;
+
+    ServicioUsuario servicioUsuario;
     public VocalesCuatroFragment() {
         // Required empty public constructor
     }
@@ -47,7 +53,6 @@ public class VocalesCuatroFragment extends Fragment implements View.OnClickListe
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_vocales_cuatro, container, false);
 
-        db=new GestorBd(getActivity());
         btnSiguiente= (Button) view.findViewById(R.id.fab);
         btnSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,16 +90,23 @@ public class VocalesCuatroFragment extends Fragment implements View.OnClickListe
         tv_title.setTypeface(font);
 
         loadPreference();
-        cargarTextV();
-
+        loadRealm();
+        actualizarPuntos();
         return view;
     }
-    private void cargarTextV() {
-        id_user =db.obtenerId(userName);
-        List<Puntos> pts=db.sumaPuntos(id_user);
-        pts=db.sumaPuntos(id_user);
-        int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-        tv_puntos.setText(""+ p);
+
+    private void loadRealm() {
+        Realm.init(getActivity());
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+
     }
     private void loadPreference() {
         preferences = getActivity().getSharedPreferences(Preference.PREFERENCE_NAME, Activity.MODE_PRIVATE);
@@ -145,6 +157,14 @@ public class VocalesCuatroFragment extends Fragment implements View.OnClickListe
         }else if (v.getId() == R.id.v_aspnasa_uh) {
             MediaPlayer mp = MediaPlayer.create(getActivity(), R.raw.n_asp_u);
             mp.start();
+        }
+    }
+    private void actualizarPuntos() {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p);
         }
     }
 

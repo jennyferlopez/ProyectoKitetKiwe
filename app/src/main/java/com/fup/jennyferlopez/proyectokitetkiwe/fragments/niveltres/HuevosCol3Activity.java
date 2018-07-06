@@ -109,7 +109,7 @@ public class HuevosCol3Activity extends AppCompatActivity implements View.OnClic
                     }catch(InterruptedException e){
                         e.printStackTrace();
                     }finally{
-                        Intent ir=new Intent(getApplicationContext(), QuizTresActivity.class);
+                        Intent ir=new Intent(getApplicationContext(), QuizFinal3Activity.class);
                         startActivity(ir);
                         finish();
                     }

@@ -12,23 +12,31 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
 
 import java.util.List;
 
-public class GlobosActivity extends AppCompatActivity{
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
+public class GlobosActivity extends AppCompatActivity implements View.OnClickListener{
 
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView  tv_puntos;
-    ImageView icAvatarNiveles;
+    ImageView icAvatarNiveles, imgAyuda;
     TextView tv_title;
 
     ImageView vcg_a, vcg_e,vcg_i, vcg_u, vng_a, vng_e, vng_i, vng_u, v_uno, v_dos, v_tres, img_canasta;
@@ -37,7 +45,6 @@ public class GlobosActivity extends AppCompatActivity{
     private int modificarX=0;
     private int modificary=0;
     boolean detectView;
-    GestorBd db;
     float vca_x, vca_x1, vca_y, vca_y1, vca_h,  vca_l, vca_l1;
     float vce_x1, vce_y1, vce_l, vce_l1;
     float vci_x1, vci_y1, vci_h, vci_l1;
@@ -47,15 +54,18 @@ public class GlobosActivity extends AppCompatActivity{
     float  vni_x1, vni_y1, vni_h, vni_l1;
     float  vnu_x1, vnu_y1, vnu_h, vnu_l1;
     float temp_x, temp_y;
+
+    ServicioUsuario servicioUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_globos);
-        db=new GestorBd(getApplication());
 
         tv_title = (TextView) findViewById(R.id.tv_title);
         icAvatarNiveles = (ImageView) findViewById(R.id.ic_avatarNiveles);
         tv_puntos = (TextView) findViewById(R.id.tv_puntos);
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
         String font_url ="font/dklemonyellowsun.otf";
         Typeface font = Typeface.createFromAsset(this.getResources().getAssets(), font_url);
         tv_puntos.setTypeface(font);
@@ -107,15 +117,38 @@ public class GlobosActivity extends AppCompatActivity{
         v_tres.setOnTouchListener(handlerMover);
         v_tres.setOnLongClickListener(detect);
         loadPreference();
-        cargarTextV();
+        loadSplash();
+        loadRealm();
+        loadPuntos();
     }
-    private void cargarTextV() {
-        id_user =db.obtenerId(userName);
-        List<Puntos> pts=db.sumaPuntos(id_user);
-        pts=db.sumaPuntos(id_user);
-        int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-        tv_puntos.setText(""+ p);
+
+    private void loadRealm() {
+        Realm.init(this);
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+
     }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Con click sostenido arrastra el globo con las vocales con cierre glotal y las vocales nasales con cierre glotal");
+        b.putString("text_dos", "hacia el centro de la canasta");
+        b.putInt("img_uno", R.drawable.globo_ncga);
+        b.putInt("img_dos", R.drawable.canasta_globos);
+        Intent irActivity= new Intent(GlobosActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
+    }
+
 
     private void loadPreference() {
         preferences = getSharedPreferences(Preference.PREFERENCE_NAME, Activity.MODE_PRIVATE);
@@ -424,29 +457,18 @@ public class GlobosActivity extends AppCompatActivity{
                 Intent irMenu = new Intent(getApplication(), Niveles13Activity.class);
                 startActivity(irMenu);
                 finish();
-            }if (cont_good==8 && cont_intentos ==8){
-                Puntos puntos= new Puntos(id_user, 3);
-                db.insertarPuntos(puntos);
-                List<Puntos> pts=db.sumaPuntos(id_user);
-                int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-                tv_puntos.setText(""+ p);
-            }else if (cont_good==8 && (cont_intentos >8 || cont_intentos <11)){
-                id_user =db.obtenerId(userName);
-                Puntos puntos= new Puntos(id_user, 2);
-                db.insertarPuntos(puntos);
-                List<Puntos> pts=db.sumaPuntos(id_user);
-                int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-                tv_puntos.setText(""+ p);
-            }else if (cont_good==8 && (cont_intentos >=11 || cont_intentos <=14)){
-                id_user =db.obtenerId(userName);
-                Puntos puntos= new Puntos(id_user, 1);
-                db.insertarPuntos(puntos);
-                List<Puntos> pts=db.sumaPuntos(id_user);
-                int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-                tv_puntos.setText(""+ p);
-            }else if (cont_good<4 && cont_intentos >14){
-                toastWarning();
-            }
+                }if (cont_good==8 && cont_intentos ==8){
+                    SumarPuntos(3);
+                    puntosGanados(3);
+                }else if (cont_good==8 && (cont_intentos >8 || cont_intentos <11)){
+                    SumarPuntos(2);
+                    puntosGanados(2);
+                }else if (cont_good==8 && (cont_intentos >=11 || cont_intentos <=14)){
+                    SumarPuntos(1);
+                    puntosGanados(1);
+                }else if (cont_good<4 && cont_intentos >14){
+                    toastWarning();
+                }
         }
     };
         private void toastFail() {
@@ -485,6 +507,45 @@ public class GlobosActivity extends AppCompatActivity{
             toasta.show();
 
         }
+    private void loadPuntos() {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+            servicioUsuario.actualizaractivity(usuario_por_id,"VocalesColiActivity");
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p);
+        }
+    }
+    private void SumarPuntos(int puntos) {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+
+            servicioUsuario.actualizarPuntos(usuario_por_id,puntos+p);
+            int p1=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p1);
+        }
+    }
+    private void puntosGanados(int puntos) {
+        Toast toasta = new Toast(getApplicationContext());
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_personalizado,
+                (ViewGroup) findViewById(R.id.lytLayout));
+
+        TextView txtMsg = (TextView)layout.findViewById(R.id.tvMsjToast);
+        ImageView imgToast =(ImageView) layout.findViewById(R.id.imgToast);
+        imgToast.setBackgroundResource(R.drawable.ic_oros);
+        txtMsg.setText("Ganaste "+ puntos +" semillas");
+        String font_url ="font/dklemonyellowsun.otf";
+        Typeface font = Typeface.createFromAsset(this.getResources().getAssets(), font_url);
+        txtMsg.setTypeface(font);
+        toasta.setDuration(Toast.LENGTH_SHORT);
+        toasta.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0,0);
+        toasta.setView(layout);
+        toasta.show();
+    }
 
     private void toastWarning() {
         Toast toasta = new Toast(getApplicationContext());
@@ -503,5 +564,12 @@ public class GlobosActivity extends AppCompatActivity{
         toasta.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0,0);
         toasta.setView(layout);
         toasta.show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }
     }
 }

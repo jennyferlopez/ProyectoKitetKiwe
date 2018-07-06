@@ -8,12 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.nivelcinco.Nivel5Activity;
+import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveltres.ColorCorresActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.Niveles12Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
@@ -26,7 +30,7 @@ public class LaberintoActivity extends AppCompatActivity implements View.OnClick
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView tv_puntos;
-    ImageView icAvatarNiveles, img_e_r, img_cambiar_letras, img_uno, img_tres, img_seis;
+    ImageView icAvatarNiveles, img_e_r, img_cambiar_letras, img_uno, img_tres, img_seis,imgAyuda;
     TextView tv_title;
     GestorBd db;
     int cont_intentos=0, cont_good=0, id_user;
@@ -48,15 +52,30 @@ public class LaberintoActivity extends AppCompatActivity implements View.OnClick
         Typeface font = Typeface.createFromAsset(this.getResources().getAssets(), font_url);
         tv_puntos.setTypeface(font);
         tv_title.setTypeface(font);
-
         img_e_r.setOnClickListener(this);
         img_tres.setOnClickListener(this);
         img_uno.setOnClickListener(this);
         img_seis.setOnClickListener(this);
 
-
         loadPreference();
         cargarTextV();
+
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
+        loadSplash();
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Selecciona las letras de los circulos");
+        b.putString("text_dos", "y completa la palabra");
+        b.putInt("img_uno", R.drawable.img_ch);
+        b.putInt("img_dos", R.drawable.img_seisletras);
+        Intent irActivity= new Intent(LaberintoActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
     }
     private void cargarTextV() {
         id_user =db.obtenerId(userName);
@@ -91,7 +110,7 @@ public class LaberintoActivity extends AppCompatActivity implements View.OnClick
 
     private void cargarPuntos() {
         if (cont_good ==4) {
-            Intent irMenu = new Intent(getApplication(), QuizCuatroActivity.class);
+            Intent irMenu = new Intent(getApplication(), QuizFinal4Activity.class);
             startActivity(irMenu);
             finish();
         }if (cont_good==4 && cont_intentos ==4){
@@ -124,7 +143,9 @@ public class LaberintoActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
 
         int id= v.getId();
-        if (id==R.id.e_r){
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }else if (id==R.id.e_r){
             img_cambiar_letras.setBackgroundResource(R.drawable.img_seiscr);
             Thread timerThread = new Thread(){
                 public void run(){

@@ -146,7 +146,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_height="70dp"
                 android:id="@+id/img_8"
-                android:background="@drawable/txt_naranja" />
+                android:background="@drawable/num_taw" />
             <ImageView
                 android:layout_width="@dimen/color_c"
                 android:layout_gravity="center_horizontal"
@@ -163,7 +163,7 @@
                 android:layout_width="@dimen/color_c"
                 android:layout_gravity="center_horizontal"
                 android:layout_height="70dp"
-                android:id="@+id/img_4"
+                android:id="@+id/img_cuatro"
                 android:background="@drawable/txt_cuatro" />
             <ImageView
                 android:layout_width="@dimen/color_c"

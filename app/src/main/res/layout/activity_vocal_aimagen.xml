@@ -15,7 +15,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.15">
+            android:layout_weight="0.1">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,39 +58,50 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignRight="@+id/linearLayout2"
                 android:layout_alignEnd="@+id/linearLayout2" />
-
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.07">
+            <ImageView
+                android:id="@+id/img_ayuda"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
+                android:src="@drawable/ayuda" />
         </RelativeLayout>
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="90dp"
+            android:layout_height="80dp"
             android:background="@drawable/imagen_correspondiente"
             android:id="@+id/imageView8"
-
-            android:layout_marginTop="30dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.75">
-
-
+            android:layout_weight="0.8">
 
             <ImageView
+                android:id="@+id/v_na_u"
                 android:layout_width="@dimen/wrap_vocales"
                 android:layout_height="@dimen/wrap_vocales"
-                android:background="@drawable/v_aspinasa_u"
-                android:id="@+id/v_na_u"
-
-                android:layout_marginLeft="100dp"
-                android:layout_marginTop="30dp" />
+                android:layout_alignLeft="@+id/img_conejo"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/img_conejo"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/v_aspinasa_u" />
             <ImageView
                 android:layout_width="@dimen/wrap_vocales"
                 android:layout_height="@dimen/wrap_vocales"
                 android:background="@drawable/v_aspiradas_a"
                 android:id="@+id/v_as_a"
-android:layout_centerInParent="true"
+                android:layout_centerInParent="true"
                 android:layout_marginLeft="70dp"
                 />
 
@@ -115,13 +126,13 @@ android:layout_marginRight="20dp"
                 android:layout_toEndOf="@+id/v_as_u" />
 
             <ImageView
+                android:id="@+id/v_na_a"
                 android:layout_width="@dimen/wrap_vocales"
                 android:layout_height="@dimen/wrap_vocales"
-                android:background="@drawable/v_aspinasa_a"
-                android:id="@+id/v_na_a"
-                android:layout_centerVertical="true"
-                android:layout_alignLeft="@+id/v_na_u"
-                android:layout_alignStart="@+id/v_na_u" />
+                android:layout_alignLeft="@+id/img_conejo"
+                android:layout_alignStart="@+id/img_conejo"
+                android:layout_alignTop="@+id/v_as_a"
+                android:background="@drawable/v_aspinasa_a" />
             <ImageView
                 android:layout_width="@dimen/wrap_vocales"
                 android:layout_height="@dimen/wrap_vocales"
@@ -132,13 +143,13 @@ android:layout_marginRight="20dp"
                 android:layout_alignStart="@+id/v_as_a" />
 
             <ImageView
+                android:id="@+id/img_rosado"
                 android:layout_width="@dimen/img_recuadro_w"
                 android:layout_height="@dimen/img_recuadro"
-                android:background="@drawable/img_aguila"
-                android:id="@+id/img_rosado"
                 android:layout_alignParentBottom="true"
-                android:layout_alignLeft="@+id/img_rojo"
-                android:layout_alignStart="@+id/img_rojo" />
+                android:layout_toEndOf="@+id/v_as_a"
+                android:layout_toRightOf="@+id/v_as_a"
+                android:background="@drawable/rosado_good" />
             <ImageView
                 android:layout_width="@dimen/img_recuadro_w"
                 android:layout_height="@dimen/img_recuadro"
@@ -155,20 +166,19 @@ android:layout_marginRight="20dp"
                 android:layout_below="@+id/img_sabila"
                 android:layout_alignLeft="@+id/img_conejo"
                 android:layout_alignStart="@+id/img_conejo" />
+
             <ImageView
-                android:layout_width="@dimen/img_recuadro_w"
-                android:layout_height="@dimen/img_recuadro"
-                android:background="@drawable/img_rojo"
                 android:id="@+id/img_rojo"
-                android:layout_marginBottom="5dp"
+                android:layout_width="@dimen/img_recuadro_w"
+                android:layout_height="@dimen/img_recuadro"
                 android:layout_above="@+id/img_rosado"
-                android:layout_toRightOf="@+id/img_aguacate"
-                android:layout_toStartOf="@+id/v_as_e"
-                android:layout_toLeftOf="@+id/v_as_e" />
+                android:layout_toEndOf="@+id/img_sabila"
+                android:layout_toRightOf="@+id/img_sabila"
+                android:background="@drawable/img_rojo" />
             <ImageView
                 android:layout_width="@dimen/img_recuadro_w"
                 android:layout_height="@dimen/img_recuadro"
-                android:background="@drawable/img_sabila"
+                android:background="@drawable/sabila_good"
                 android:id="@+id/img_sabila"
                 android:layout_marginBottom="5dp"
                 android:layout_above="@+id/img_aguacate"

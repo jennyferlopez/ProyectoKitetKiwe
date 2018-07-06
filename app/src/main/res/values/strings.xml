@@ -16,46 +16,45 @@
     <string name="title_activity_vocales">VocalesActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+    <string name="brush">Brush</string>
+    <string name="erase">Erase</string>
+    <string name="save">Save</string>
+    <string name="paint">Paint</string>
+    <string name="sml">Small</string>
+    <string name="med">Medium</string>
+    <string name="lrg">Large</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="col_good">Muy bien!</string>
-    <string name="himno">Hoy necesito que me abraces fuerte
-Sin palabras, sin excusas, solo brazos
-Que no tengas prisa, que no me recuerdes
-Que solo somos la apariencia de este barro
-Hoy necesito
-Que me abraces fuerte
-Por encima de los miedos y prejuicios
-Que alcances ya los huesos
-Y me despiertes lejos
-De esta torpe selva a fin de siglo
-\n
-Y no me preguntes
-Que es lo que pasa
-No traigo heridas
-Es solo que preciso
-Notarte bien dentro
-Sentirme en casa
-Saber que es muy cierto que estoy contigo
-\n
-Hoy necesito
-Que me abraces fuerte
-Y que tu silencio traiga mucha calma
-Que la noche venga lenta
-Como nieve
-Y nos halle enlazadas las espaldas
-\n
-Y no me preguntes...
-\n
-Hoy necesito
-Que me abraces fuerte
-Por encima de los miedos y prejuicios
-Que alcances ya los huesos
-Y me despiertes lejos
-De esta torpe selva a fin de siglo</string>
+    <string name="himno">
+        I estrofa
+        \n
+        \n
+        Nusñi een skjewñijuñaja wechan uswaeenas jiputjaw Ewte nenñuwajas uy ñanchja Jyukaysa tjaw wecha Na kiwete we`sh jyuka Tjeñte nuste finzen uste Peñ kajcha nwewe wasa Pytja yuuchak kluskje uu.
+        \n
+        \n
+        CORO
+        \n
+        \n
+        Kue`sh uskiwe nweñiñaja’ Wecha eenas ji`putajaw Ewte neñuwecha pytja yuucha Aachja ewteña finzetsjaw Achja ewteña finzetsjaw Ewte nuitñijuñaja Wet finze wasatjaw Wechana uswajas ipakanachja Aachja ewteña finzetsjaw</string>
     <string name="toast_fail">Intentalo de nuevo</string>
     <string name="title_activity_consonantes">ConsonantesActivity</string>
     <string name="title_activity_colores">ColoresActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_numeros">NumerosActivity</string>
+    <string name="title_activity_animales_plantas">AnimalesPlantasActivity</string>
+
+    <string name="catG">Guardar Categoria</string>
+    <string name="catS">Seleccionar Categoria</string>
+    <string name="imgG">Guardar Imagen</string>
+    <string name="carI">Cargar Imagen</string>
+    <string name="imgC">Cargar Imagen</string>
+    <string name="mostrar">Glosario Nasa</string>
+    <string name="guardar">Guardar</string>
+
+
+    <string name="title_activity_guardar_categoria">GuardarCategoriaActivity</string>
+    <string name="title_activity_guardar_imagen">GuardarImagenActivity</string>
+    <string name="title_activity_mostrar">MostrarActivity</string>
+    <string name="title_activity_todos_siete">TodosSieteActivity</string>
 </resources>

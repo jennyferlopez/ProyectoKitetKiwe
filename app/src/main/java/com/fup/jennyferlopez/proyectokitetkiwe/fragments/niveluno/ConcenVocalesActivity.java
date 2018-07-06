@@ -14,6 +14,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -21,17 +23,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.adapters.AdaptadorImagenes;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.Niveles13Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.Niveles14Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConcenVocalesActivity extends AppCompatActivity {
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
+public class ConcenVocalesActivity extends AppCompatActivity implements View.OnClickListener{
 
     int fondo = R.drawable.img_concentrate;
     int [] listadoImagenes = {
@@ -56,20 +64,20 @@ public class ConcenVocalesActivity extends AppCompatActivity {
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView  tv_puntos;
-    ImageView icAvatarNiveles;
+    ImageView icAvatarNiveles,imgAyuda;
     TextView tv_title;
-    GestorBd db;
 
+    ServicioUsuario servicioUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_concen_vocales);
 
-        db=new GestorBd(getApplication());
-
         tv_title = (TextView) findViewById(R.id.tv_title);
         icAvatarNiveles = (ImageView) findViewById(R.id.ic_avatarNiveles);
         tv_puntos = (TextView) findViewById(R.id.tv_puntos);
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
         String font_url ="font/dklemonyellowsun.otf";
         Typeface font = Typeface.createFromAsset(this.getResources().getAssets(), font_url);
         tv_puntos.setTypeface(font);
@@ -104,14 +112,36 @@ public class ConcenVocalesActivity extends AppCompatActivity {
         gridView.setAdapter(adaptadorImagenes);
 
         loadPreference();
-        cargarTextV();
+        loadSplash();
+        loadRealm();
+        loadPuntos();
     }
-    private void cargarTextV() {
-        id_user =db.obtenerId(userName);
-        List<Puntos> pts=db.sumaPuntos(id_user);
-        pts=db.sumaPuntos(id_user);
-        int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-        tv_puntos.setText(""+ p);
+
+    private void loadRealm() {
+        Realm.init(this);
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Selecciona las parejas de las vocales correspondientes");
+        b.putString("text_dos", "");
+        b.putInt("img_uno", R.drawable.img_concentrate);
+        b.putInt("img_dos", 0);
+        Intent irActivity= new Intent(ConcenVocalesActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
     }
 
     private void loadPreference() {
@@ -143,6 +173,12 @@ public class ConcenVocalesActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }
+    }
 
 
     private class Validar extends AsyncTask<Void,Void,Void> {
@@ -190,52 +226,77 @@ public class ConcenVocalesActivity extends AppCompatActivity {
                     startActivity(irMenu);
                     finish();
                 }if (cont_good==6 && cont_intentos ==6){
-                    Puntos puntos= new Puntos(id_user, 3);
-                    db.insertarPuntos(puntos);
-                    List<Puntos> pts=db.sumaPuntos(id_user);
-                    int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-                    tv_puntos.setText(""+ p);
-                }else if (cont_good==6 && (cont_intentos >6 || cont_intentos <9)){
-                    id_user =db.obtenerId(userName);
-                    Puntos puntos= new Puntos(id_user, 2);
-                    db.insertarPuntos(puntos);
-                    List<Puntos> pts=db.sumaPuntos(id_user);
-                    int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-                    tv_puntos.setText(""+ p);
-                }else if (cont_good==6 && (cont_intentos >=9 || cont_intentos <=12)){
-                    id_user =db.obtenerId(userName);
-                    Puntos puntos= new Puntos(id_user, 1);
-                    db.insertarPuntos(puntos);
-                    List<Puntos> pts=db.sumaPuntos(id_user);
-                    int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-                    tv_puntos.setText(""+ p);
-                }else if (cont_good<4 && cont_intentos >12){
+                    SumarPuntos(3);
+                    puntosGanados(3);
+            }else if (cont_good==6 && (cont_intentos >6 || cont_intentos <9)){
+                    SumarPuntos(2);
+                    puntosGanados(2);
+            }else if (cont_good==6 && (cont_intentos >=9 || cont_intentos <=12)){
+                    SumarPuntos(1);
+                    puntosGanados(1);
+            }else if (cont_good<4 && cont_intentos >12) {
                     toastWarning();
                 }
             }
         }
+      }
+    private void toastWarning() {
+        Toast toasta = new Toast(getApplicationContext());
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_personalizado,
+                (ViewGroup) findViewById(R.id.lytLayout));
 
-        private void toastWarning() {
-                Toast toasta = new Toast(getApplicationContext());
-                LayoutInflater inflater = getLayoutInflater();
-                View layout = inflater.inflate(R.layout.toast_personalizado,
-                        (ViewGroup) findViewById(R.id.lytLayout));
+        TextView txtMsg = (TextView)layout.findViewById(R.id.tvMsjToast);
+        ImageView imgToast =(ImageView) layout.findViewById(R.id.imgToast);
+        imgToast.setBackgroundResource(R.drawable.toast_warning);
+        txtMsg.setText("te recomendamos volver al nivel de reconocimiento tienes "+ cont_intentos +" fallidos");
+        String font_url ="font/dklemonyellowsun.otf";
+        Typeface font = Typeface.createFromAsset(getApplication().getResources().getAssets(), font_url);
+        txtMsg.setTypeface(font);
+        toasta.setDuration(Toast.LENGTH_SHORT);
+        toasta.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0,0);
+        toasta.setView(layout);
+        toasta.show();
 
-                TextView txtMsg = (TextView)layout.findViewById(R.id.tvMsjToast);
-                ImageView imgToast =(ImageView) layout.findViewById(R.id.imgToast);
-                imgToast.setBackgroundResource(R.drawable.toast_warning);
-                txtMsg.setText("te recomendamos volver al nivel de reconocimiento tienes "+ cont_intentos +" fallidos");
-                String font_url ="font/dklemonyellowsun.otf";
-                Typeface font = Typeface.createFromAsset(getApplication().getResources().getAssets(), font_url);
-                txtMsg.setTypeface(font);
-                toasta.setDuration(Toast.LENGTH_SHORT);
-                toasta.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0,0);
-                toasta.setView(layout);
-                toasta.show();
-
+    }
+    private void loadPuntos() {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+            servicioUsuario.actualizaractivity(usuario_por_id,"VocalesColiActivity");
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p);
         }
+    }
+    private void SumarPuntos(int puntos) {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
 
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
 
+            servicioUsuario.actualizarPuntos(usuario_por_id,puntos+p);
+            int p1=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p1);
+        }
+    }
+    private void puntosGanados(int puntos) {
+        Toast toasta = new Toast(getApplicationContext());
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_personalizado,
+                (ViewGroup) findViewById(R.id.lytLayout));
+
+        TextView txtMsg = (TextView)layout.findViewById(R.id.tvMsjToast);
+        ImageView imgToast =(ImageView) layout.findViewById(R.id.imgToast);
+        imgToast.setBackgroundResource(R.drawable.ic_oros);
+        txtMsg.setText("Ganaste "+ puntos +" semillas");
+        String font_url ="font/dklemonyellowsun.otf";
+        Typeface font = Typeface.createFromAsset(this.getResources().getAssets(), font_url);
+        txtMsg.setTypeface(font);
+        toasta.setDuration(Toast.LENGTH_SHORT);
+        toasta.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0,0);
+        toasta.setView(layout);
+        toasta.show();
     }
 
     // si las imagenes no coinciden se voltean

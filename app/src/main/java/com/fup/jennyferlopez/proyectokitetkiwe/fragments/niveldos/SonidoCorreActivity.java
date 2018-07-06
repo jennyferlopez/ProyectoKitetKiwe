@@ -11,12 +11,16 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.Niveles13Activity;
+import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.VocalAImagenActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
@@ -35,6 +39,7 @@ public class SonidoCorreActivity extends AppCompatActivity implements View.OnCli
     int i =0, num;
     int sonidos[]= new int[16];
     int cont_intentos=0, cont_good=0, cont_fail=0, id_user;
+    ImageView imgAyuda;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +67,8 @@ public class SonidoCorreActivity extends AppCompatActivity implements View.OnCli
         img_y =(ImageView) findViewById(R.id.img_y);
         img_kx =(ImageView) findViewById(R.id.img_kx);
 
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
         String font_url ="font/dklemonyellowsun.otf";
         Typeface font = Typeface.createFromAsset(this.getResources().getAssets(), font_url);
         tv_puntos.setTypeface(font);
@@ -103,6 +110,20 @@ public class SonidoCorreActivity extends AppCompatActivity implements View.OnCli
         img_kx.setOnClickListener(this);
         loadPreference();
         cargarTextV();
+        loadSplash();
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Selecciona la imagen de sonido");
+        b.putString("text_dos", "y seleciona la consonante correspondiente");
+        b.putInt("img_uno", R.drawable.con_play);
+        b.putInt("img_dos", R.drawable.img_ch);
+        Intent irActivity= new Intent(SonidoCorreActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
     }
     private void cargarTextV() {
         id_user =db.obtenerId(userName);
@@ -135,7 +156,9 @@ public class SonidoCorreActivity extends AppCompatActivity implements View.OnCli
     }
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.con_play) {
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }else if (v.getId() == R.id.con_play) {
             MediaPlayer mp = MediaPlayer.create(this, sonidos[i]);
             mp.start();
             num=1;

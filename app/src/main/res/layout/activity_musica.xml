@@ -16,7 +16,6 @@
         android:layout_marginRight="29dp"
         android:background="@drawable/barra_musica"/>
 
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -71,8 +70,9 @@
                 android:id="@+id/letraHimno"
                 android:textColor="@color/cardview_dark_background"
                 android:textSize="30sp"
-                android:layout_marginLeft="35dp"
-                android:layout_marginRight="35dp"
+                android:gravity="center_horizontal"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="45dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/himno" />
         </LinearLayout>

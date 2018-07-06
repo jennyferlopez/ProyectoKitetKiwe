@@ -19,9 +19,14 @@ import com.fup.jennyferlopez.proyectokitetkiwe.R;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.Niveles11Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
 
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +43,7 @@ public class ConsAspiradasFragment extends Fragment implements View.OnClickListe
     GestorBd db;
     ImageView c_asp_ch, c_asp_kh, c_asp_th, c_asp_ph, c_aspal_cxh, c_aspal_kxh, c_aspal_pxh, c_aspal_txh;
 
+    ServicioUsuario servicioUsuario;
     public ConsAspiradasFragment() {
         // Required empty public constructor
     }
@@ -86,16 +92,23 @@ public class ConsAspiradasFragment extends Fragment implements View.OnClickListe
         tv_title.setTypeface(font);
 
         loadPreference();
-        cargarTextV();
-
+        loadRealm();
+        actualizarPuntos();
         return view;
     }
-    private void cargarTextV() {
-        id_user =db.obtenerId(userName);
-        List<Puntos> pts=db.sumaPuntos(id_user);
-        pts=db.sumaPuntos(id_user);
-        int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-        tv_puntos.setText(""+ p);
+
+    private void loadRealm() {
+        Realm.init(getActivity());
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+
     }
     private void loadPreference() {
         preferences = getActivity().getSharedPreferences(Preference.PREFERENCE_NAME, Activity.MODE_PRIVATE);
@@ -148,5 +161,13 @@ public class ConsAspiradasFragment extends Fragment implements View.OnClickListe
         }
     }
 
+    private void actualizarPuntos() {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p);
+        }
+    }
 
 }

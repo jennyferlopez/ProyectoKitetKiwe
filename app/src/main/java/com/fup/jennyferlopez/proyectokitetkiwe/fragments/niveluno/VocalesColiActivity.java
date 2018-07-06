@@ -1,40 +1,45 @@
 package com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.ImagenR;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
 
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class VocalesColiActivity extends AppCompatActivity implements View.OnClickListener {
 
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView tv_puntos;
-    ImageView icAvatarNiveles;
+    ImageView icAvatarNiveles, imgAyuda;
     TextView tv_title;
     private int modificarX=0;
     private int modificary=0;
@@ -44,19 +49,15 @@ public class VocalesColiActivity extends AppCompatActivity implements View.OnCli
     float xm, xm1, ym, ym1, hm,hm1, lm, lm1;
     float xg, xg1, yg, yg1, hg,hg1, lg, lg1;
 
-    GestorBd db;
-
+    ServicioUsuario servicioUsuario;
     ImageView img_a, img_e, img_i, img_u, snd_a, snd_e, snd_i, snd_u;
     int cont_intentos=0, cont_good=0, cont_fail=0, id_user;
     float temp_x, temp_y;
-    List<Puntos> pts;
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vocales_coli);
-
-        db=new GestorBd(getApplication());
-
         img_a= (ImageView) findViewById(R.id.nv_col_a);
         img_e= (ImageView) findViewById(R.id.nv_col_e);
         img_i= (ImageView) findViewById(R.id.nv_col_i);
@@ -86,16 +87,45 @@ public class VocalesColiActivity extends AppCompatActivity implements View.OnCli
 
         tv_title = (TextView) findViewById(R.id.tv_title);
         icAvatarNiveles = (ImageView) findViewById(R.id.ic_avatarNiveles);
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
         tv_puntos = (TextView) findViewById(R.id.tv_puntos);
         String font_url ="font/dklemonyellowsun.otf";
         Typeface font = Typeface.createFromAsset(this.getResources().getAssets(), font_url);
         tv_puntos.setTypeface(font);
         tv_title.setTypeface(font);
         loadPreference();
-        cargarTextV();
+        loadSplash();
+        loadRealm();
+        loadPuntos();
     }
 
+    private void loadRealm() {
+        Realm.init(this);
 
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Selecciona la imagen de sonido");
+        b.putString("text_dos", "y arrastra con click sostenido la vocal correspondiente");
+        b.putInt("img_uno", R.drawable.sound);
+        b.putInt("img_dos", R.drawable.v_oral_a);
+        Intent irActivity= new Intent(VocalesColiActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
+    }
 
     private void loadPreference() {
         preferences = getSharedPreferences(Preference.PREFERENCE_NAME, Activity.MODE_PRIVATE);
@@ -263,7 +293,6 @@ public class VocalesColiActivity extends AppCompatActivity implements View.OnCli
                                 cont_intentos=cont_intentos+1;
                             }
                             break;
-
                     }
                     switch (v.getId()){
                         case R.id.nv_col_u:
@@ -302,40 +331,62 @@ public class VocalesColiActivity extends AppCompatActivity implements View.OnCli
 
         private void cargarPuntos() {
             if (cont_good ==4) {
-                        Intent irMenu = new Intent(getApplication(), Niveles12Activity.class);
-                        startActivity(irMenu);
-                        finish();
+                Intent irMenu = new Intent(getApplication(), Niveles12Activity.class);
+                startActivity(irMenu);
+                finish();
             }if (cont_good==4 && cont_intentos ==4){
-                Puntos puntos= new Puntos(id_user, 3);
-                db.insertarPuntos(puntos);
-                List<Puntos> pts=db.sumaPuntos(id_user);
-                int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-                tv_puntos.setText(""+ p);
+                SumarPuntos(3);
+                puntosGanados(3);
             }else if (cont_good==4 && (cont_intentos >4 || cont_intentos <7)){
-                id_user =db.obtenerId(userName);
-                Puntos puntos= new Puntos(id_user, 2);
-                db.insertarPuntos(puntos);
-                List<Puntos> pts=db.sumaPuntos(id_user);
-                int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-                tv_puntos.setText(""+ p);
+                SumarPuntos(2);
+                puntosGanados(2);
             }else if (cont_good==4 && (cont_intentos >=7 || cont_intentos <=10)){
-                id_user =db.obtenerId(userName);
-                Puntos puntos= new Puntos(id_user, 1);
-                db.insertarPuntos(puntos);
-                List<Puntos> pts=db.sumaPuntos(id_user);
-                int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-                tv_puntos.setText(""+ p);
+                SumarPuntos(1);
+                puntosGanados(1);
             }else if (cont_good<4 && cont_intentos >10){
                 toastWarning();
             }
         }
     };
-    private void cargarTextV() {
-        id_user =db.obtenerId(userName);
-        List<Puntos> pts=db.sumaPuntos(id_user);
-        pts=db.sumaPuntos(id_user);
-        int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-        tv_puntos.setText(""+ p);
+
+    private void loadPuntos() {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+            servicioUsuario.actualizaractivity(usuario_por_id,"VocalesColiActivity");
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p);
+        }
+    }
+    private void SumarPuntos(int puntos) {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+
+            servicioUsuario.actualizarPuntos(usuario_por_id,puntos+p);
+            int p1=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p1);
+        }
+    }
+    private void puntosGanados(int puntos) {
+        Toast toasta = new Toast(getApplicationContext());
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_personalizado,
+                (ViewGroup) findViewById(R.id.lytLayout));
+
+        TextView txtMsg = (TextView)layout.findViewById(R.id.tvMsjToast);
+        ImageView imgToast =(ImageView) layout.findViewById(R.id.imgToast);
+        imgToast.setBackgroundResource(R.drawable.ic_oros);
+        txtMsg.setText("Ganaste "+ puntos +" semillas");
+        String font_url ="font/dklemonyellowsun.otf";
+        Typeface font = Typeface.createFromAsset(this.getResources().getAssets(), font_url);
+        txtMsg.setTypeface(font);
+        toasta.setDuration(Toast.LENGTH_SHORT);
+        toasta.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0,0);
+        toasta.setView(layout);
+        toasta.show();
     }
 
     private void toastWarning() {
@@ -391,8 +442,8 @@ public class VocalesColiActivity extends AppCompatActivity implements View.OnCli
         toasta.setDuration(Toast.LENGTH_SHORT);
         toasta.setView(layout);
         toasta.show();
-
     }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ns_col_a) {
@@ -405,12 +456,10 @@ public class VocalesColiActivity extends AppCompatActivity implements View.OnCli
             MediaPlayer mp = MediaPlayer.create(this, R.raw.nasal_i);
             mp.start();
         }else if (v.getId() == R.id.ns_col_u) {
-            MediaPlayer mp = MediaPlayer.create(this, R.raw.negro);
+            MediaPlayer mp = MediaPlayer.create(this, R.raw.nasal_u);
             mp.start();
+        }else if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
         }
     }
-
-
-
-
 }

@@ -8,12 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveltres.ColorCorres2Activity;
+import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveltres.ColorCorresActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.Niveles12Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
@@ -26,7 +30,7 @@ public class UnirPuntosActivity extends AppCompatActivity implements View.OnClic
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView tv_puntos;
-    ImageView icAvatarNiveles, txt_dos;
+    ImageView icAvatarNiveles,imgAyuda;
     TextView tv_title;
     GestorBd db;
     protected DrawingView mDrawingView;
@@ -43,7 +47,7 @@ public class UnirPuntosActivity extends AppCompatActivity implements View.OnClic
         img_uno = (ImageView) findViewById(R.id.img_1);
         img_dos = (ImageView) findViewById(R.id.img_2);
         img_tres = (ImageView) findViewById(R.id.img_3);
-        img_cuatro = (ImageView) findViewById(R.id.img_4);
+        img_cuatro = (ImageView) findViewById(R.id.img_cuatro);
         img_cinco = (ImageView) findViewById(R.id.img_5);
         img_seis= (ImageView) findViewById(R.id.img_6);
         img_siete = (ImageView) findViewById(R.id.img_7);
@@ -63,7 +67,8 @@ public class UnirPuntosActivity extends AppCompatActivity implements View.OnClic
         img_nueve.setOnClickListener(this);
         img_diez.setOnClickListener(this);
 
-
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
         tv_title = (TextView) findViewById(R.id.tv_title);
         icAvatarNiveles = (ImageView) findViewById(R.id.ic_avatarNiveles);
         tv_puntos = (TextView) findViewById(R.id.tv_puntos);
@@ -75,6 +80,20 @@ public class UnirPuntosActivity extends AppCompatActivity implements View.OnClic
 
         loadPreference();
         cargarTextV();
+        loadSplash();
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Selecciona el numero en letras correspondiente");
+        b.putString("text_dos", "ya el que se muestra");
+        b.putInt("img_uno", R.drawable.txt_uno);
+        b.putInt("img_dos", R.drawable.num_c);
+        Intent irActivity= new Intent(UnirPuntosActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
     }
     private void cargarTextV() {
         id_user =db.obtenerId(userName);
@@ -146,7 +165,9 @@ public class UnirPuntosActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.img_5) {
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }else if (v.getId() == R.id.img_5) {
             paint.setBackgroundResource(R.drawable.cinco_r);
             Thread timerThread = new Thread(){
                 public void run(){

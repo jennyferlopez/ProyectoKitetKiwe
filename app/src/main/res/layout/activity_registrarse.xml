@@ -74,7 +74,6 @@
         android:background="@drawable/cajas_txt"
         />
 
-
     <LinearLayout
         android:layout_height="0dp"
         android:layout_width="match_parent"
@@ -89,7 +88,6 @@
             android:layout_height="match_parent"
             android:textColor="@color/colorPrimaryDark"
             android:background="@drawable/btn_uno"
-            android:onClick="registrar"
             android:textSize="18sp"
             android:text="~REGISTRAR~"/>
 

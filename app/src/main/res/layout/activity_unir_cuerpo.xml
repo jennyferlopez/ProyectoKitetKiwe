@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fondo"
+    android:orientation="vertical"
+    tools:context=".fragments.niveluno.ConcenVocalesActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.32">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_title"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="NIVEL 6"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="34sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/cinta_niveles"
+            android:orientation="horizontal"
+            android:id="@+id/linearLayout2">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_oros"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="35dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:text="x 0"
+                android:id="@+id/tv_puntos"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/cardview_dark_background"/>
+        </LinearLayout>
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/ic_avatarNiveles"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/linearLayout2"
+            android:layout_alignEnd="@+id/linearLayout2" />
+
+        <ImageView
+            android:id="@+id/img_ayuda"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignEnd="@+id/ic_avatarNiveles"
+            android:layout_alignRight="@+id/ic_avatarNiveles"
+            android:layout_below="@+id/ic_avatarNiveles"
+            android:src="@drawable/ayuda" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:background="@drawable/unir_partes"
+            android:id="@+id/imageView8"
+            android:layout_below="@id/linearLayout2"
+            android:layout_marginTop="60dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.75">
+
+
+        <ImageView
+            android:layout_width="400dp"
+            android:layout_height="400dp"
+            android:src="@drawable/unir_tronco"
+            android:id="@+id/imgTronco"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:src="@drawable/mano_derecha"
+            android:id="@+id/manoDerUnir"
+            android:layout_marginRight="43dp"
+            android:layout_marginEnd="43dp"
+            android:layout_centerVertical="true"
+            android:layout_alignRight="@+id/imgTronco"
+            android:layout_alignEnd="@+id/imgTronco" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:src="@drawable/mano_izq"
+            android:id="@+id/manoIzqUnir"
+            android:layout_marginRight="29dp"
+            android:layout_marginEnd="29dp"
+            android:layout_alignTop="@+id/manoDerUnir"
+            android:layout_toLeftOf="@+id/manoDerUnir"
+            android:layout_toStartOf="@+id/manoDerUnir" />
+
+        <ImageView
+            android:layout_width="140dp"
+            android:layout_height="240dp"
+            android:src="@drawable/pie_derecho"
+            android:id="@+id/pieDerUnir"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/manoDerUnir"
+            android:layout_alignEnd="@+id/manoDerUnir"
+            android:layout_marginRight="35dp"
+            android:layout_marginEnd="35dp" />
+
+        <ImageView
+            android:layout_width="110dp"
+            android:layout_height="240dp"
+            android:src="@drawable/pie_izq"
+            android:id="@+id/pieIzqUnir"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/manoDerUnir"
+            android:layout_toStartOf="@+id/manoDerUnir" />
+
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:src="@drawable/mano_izq"
+            android:id="@+id/manoIzq"
+            android:text="ku'ta paçu"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="40sp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/pieIzq"
+            android:layout_alignStart="@+id/pieIzq" />
+
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:src="@drawable/mano_derecha"
+            android:id="@+id/manoDer"
+            android:text="ku'ta jebu"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="40sp"
+            android:layout_above="@+id/manoIzqUnir"
+            android:layout_alignRight="@+id/pieDer"
+            android:layout_alignEnd="@+id/pieDer" />
+
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:src="@drawable/pie_izq"
+            android:id="@+id/pieIzq"
+            android:text="çxida paçu"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="40sp"
+            android:layout_alignTop="@+id/manoDer"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="76dp"
+            android:layout_marginEnd="76dp"
+            android:layout_marginTop="35dp" />
+
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:src="@drawable/pie_derecho"
+            android:id="@+id/pieDer"
+            android:text="çxida jebu"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="40sp"
+            android:layout_below="@+id/manoIzqUnir"
+            android:layout_toLeftOf="@+id/pieIzqUnir"
+            android:layout_toStartOf="@+id/pieIzqUnir"
+            android:layout_marginRight="32dp"
+            android:layout_marginEnd="32dp" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:src="@drawable/img_cinta_dos"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp" />
+</LinearLayout>

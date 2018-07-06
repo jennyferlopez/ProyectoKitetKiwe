@@ -11,6 +11,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -18,8 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.adapters.AdaptadorImagenes;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveltres.Nivel3Activity;
+import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.ConcenVocalesActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.Niveles14Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
@@ -28,7 +32,7 @@ import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConcenConsonanActivity extends AppCompatActivity {
+public class ConcenConsonanActivity extends AppCompatActivity implements View.OnClickListener{
 
 
     int fondo = R.drawable.img_concentrate;
@@ -54,7 +58,7 @@ public class ConcenConsonanActivity extends AppCompatActivity {
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView tv_puntos;
-    ImageView icAvatarNiveles;
+    ImageView icAvatarNiveles, imgAyuda;
     TextView tv_title;
     GestorBd db;
 
@@ -62,12 +66,15 @@ public class ConcenConsonanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_concen_consonan);
-        db=new GestorBd(getApplication());
+        db = new GestorBd(getApplication());
 
         tv_title = (TextView) findViewById(R.id.tv_title);
         icAvatarNiveles = (ImageView) findViewById(R.id.ic_avatarNiveles);
         tv_puntos = (TextView) findViewById(R.id.tv_puntos);
-        String font_url ="font/dklemonyellowsun.otf";
+
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
+        String font_url = "font/dklemonyellowsun.otf";
         Typeface font = Typeface.createFromAsset(this.getResources().getAssets(), font_url);
         tv_puntos.setTypeface(font);
         tv_title.setTypeface(font);
@@ -97,11 +104,24 @@ public class ConcenConsonanActivity extends AppCompatActivity {
             }
         });
         inicializar();
-        adaptadorImagenes =new AdaptadorImagenes(imagenesFondo, this);
+        adaptadorImagenes = new AdaptadorImagenes(imagenesFondo, this);
         gridView.setAdapter(adaptadorImagenes);
 
         loadPreference();
         cargarTextV();
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Selecciona las parejas de las consonantes correspondientes");
+        b.putString("text_dos", "");
+        b.putInt("img_uno", R.drawable.img_concentrate);
+        b.putInt("img_dos", 0);
+        Intent irActivity= new Intent(ConcenConsonanActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
     }
     private void cargarTextV() {
         id_user =db.obtenerId(userName);
@@ -137,6 +157,13 @@ public class ConcenConsonanActivity extends AppCompatActivity {
         imagen.setBackgroundResource(imagenesSeleccionadasAleatorias[position]);
         if (cantImagenSeleccionada==2){
             new Validar().execute();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
         }
     }
 
@@ -182,7 +209,7 @@ public class ConcenConsonanActivity extends AppCompatActivity {
 
             if (numeroParejas==0){
                 if (cont_good ==6) {
-                    Intent ir = new Intent(getApplication(), QuizDosActivity.class);
+                    Intent ir = new Intent(getApplication(), QuizFinalConsonantesActivity.class);
                     startActivity(ir);
                     finish();
                 }if (cont_good==6 && cont_intentos ==6){

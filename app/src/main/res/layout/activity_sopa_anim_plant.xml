@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fondo"
+    android:orientation="vertical"
+    tools:context=".fragments.niveluno.ConcenVocalesActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.28">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="NIVEL 5"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="34sp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/cinta_niveles"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="35dp"
+                android:src="@drawable/ic_oros" />
+
+            <TextView
+                android:id="@+id/tv_puntos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="x 0"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ic_avatarNiveles"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignEnd="@+id/linearLayout2"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/linearLayout2"
+            android:layout_marginTop="20dp" />
+
+        <ImageView
+            android:id="@+id/img_ayuda"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignEnd="@+id/ic_avatarNiveles"
+            android:layout_alignRight="@+id/ic_avatarNiveles"
+            android:layout_below="@+id/ic_avatarNiveles"
+            android:src="@drawable/ayuda" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="500dp"
+            android:layout_height="80dp"
+            android:layout_below="@+id/ic_avatarNiveles"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/img_letra_falt" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:layout_weight="0.75">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/img_parca"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="45dp"
+            android:layout_marginRight="45dp"
+            android:background="@drawable/ani_caracol"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+            <ImageView
+                android:id="@+id/img_nx2"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
+                android:layout_marginStart="40dp"
+                android:background="@drawable/completar_ardilla" />
+
+            <ImageView
+                android:id="@+id/img_n2"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/img_kxh2"
+                android:layout_marginEnd="42dp"
+                android:layout_marginRight="42dp"
+                android:background="@drawable/completar_pescado" />
+
+            <ImageView
+                android:id="@+id/img_kxh2"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_above="@+id/img_nx2"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/completar_fail" />
+
+            <ImageView
+                android:id="@+id/img_tx2"
+                android:layout_width="230dp"
+                android:layout_height="50dp"
+                android:background="@drawable/completar_caracol"
+                android:layout_below="@+id/img_nx2"
+                android:layout_alignLeft="@+id/img_kxh2"
+                android:layout_alignStart="@+id/img_kxh2" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:src="@drawable/img_cinta_dos"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp" />
+</LinearLayout>

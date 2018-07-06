@@ -64,14 +64,26 @@
 
         </RelativeLayout>
 
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.07"/>
+            android:layout_weight="0.07">
+
+            <ImageView
+                android:id="@+id/img_ayuda"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
+                android:src="@drawable/ayuda" />
+        </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.1">
+            android:layout_weight="0.15">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="90dp"
@@ -85,7 +97,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.07"/>
+            android:layout_weight="0.03"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

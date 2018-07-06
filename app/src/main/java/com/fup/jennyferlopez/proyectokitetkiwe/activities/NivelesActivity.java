@@ -18,9 +18,14 @@ import com.fup.jennyferlopez.proyectokitetkiwe.R;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.VocalesActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
 
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class NivelesActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -29,16 +34,15 @@ public class NivelesActivity extends AppCompatActivity implements View.OnClickLi
     ImageView correAvaatr, icAvatarNiveles;
     RelativeLayout rlLayout;
     TextView tv_puntos;
-    GestorBd db;
     String userName, activity, pass, pathImg;
     int id_user;
+    ServicioUsuario servicioUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_niveles);
 
-        db=new GestorBd(getApplication());
         icAvatarNiveles = (ImageView) findViewById(R.id.ic_avatarNiveles);
         correAvaatr = (ImageView) findViewById(R.id.correAvatar);
         tv_puntos = (TextView) findViewById(R.id.tv_puntos);
@@ -49,18 +53,25 @@ public class NivelesActivity extends AppCompatActivity implements View.OnClickLi
         correAvaatr.setOnClickListener(this);
         rlLayout= (RelativeLayout) findViewById(R.id.lyNivel1);
         loadPreference();
-        cargarTextV();
+        //cargarTextV();
+        loadRealm();
         actualizarActivity();
     }
 
-    private void cargarTextV() {
-        id_user =db.obtenerId(userName);
-        db.eliminarPuntaje(id_user);
-        List<Puntos> pts=db.sumaPuntos(id_user);
-        pts=db.sumaPuntos(id_user);
-        int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-        tv_puntos.setText(""+ p);
+    private void loadRealm() {
+        Realm.init(this);
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+
     }
+
 
     private void loadPreference() {
         preferences = getSharedPreferences(Preference.PREFERENCE_NAME, Activity.MODE_PRIVATE);
@@ -99,34 +110,33 @@ public class NivelesActivity extends AppCompatActivity implements View.OnClickLi
         if (v.getId()== R.id.correAvatar){
             Intent irRecVocales= new Intent(this, VocalesActivity.class);
             startActivity(irRecVocales);
-            Puntos puntos= new Puntos(id_user, 3);
-            db.insertarPuntos(puntos);
+            SumarPuntos(3);
             finish();
         }
     }
-    private void actualizarActivity() {
-        activity= "NivelesActivity";
-        userName =preferences.getString(Preference.USER_NAME, "");
-        id_user =preferences.getInt(Preference.USER_ID, 0);
-        pass =preferences.getString(Preference.PASSWORD, "");
 
-        if (avatarSeleccionado.equals(null)) {
-            pathImg= String.valueOf(R.drawable.avatar_blanco);
-        } else if (avatarSeleccionado.equals("1")) {
-            pathImg= String.valueOf(R.drawable.nino_uno_n);
-        } else if (avatarSeleccionado.equals("2")) {
-            pathImg= String.valueOf(R.drawable.nino_dos_n);
-        } else if (avatarSeleccionado.equals("3")) {
-            pathImg= String.valueOf(R.drawable.nino_tres_n);
-        } else if (avatarSeleccionado.equals("4")) {
-            pathImg= String.valueOf(R.drawable.nina_uno_n);
-        } else if (avatarSeleccionado.equals("5")) {
-            pathImg= String.valueOf(R.drawable.nina_dos_n);
-        } else if (avatarSeleccionado.equals("6")) {
-            pathImg= String.valueOf(R.drawable.nina_tres_n);
+    private void SumarPuntos(int puntos) {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+
+            servicioUsuario.actualizarPuntos(usuario_por_id,puntos+p);
+            int p1=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p1);
         }
-        db.actualizarActivity(userName , pass, pathImg, activity, id_user);
     }
+    private void actualizarActivity() {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+            servicioUsuario.actualizaractivity(usuario_por_id,"NivelesActivity");
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p);
+        }
+    }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             Intent irMenu=new Intent(getApplication(), MenuActivity.class);

@@ -17,9 +17,9 @@
     <dimen name="img_recuadro_w">120dp</dimen>
     <dimen name="wrap_vocales">100dp</dimen>
     <dimen name="wh_vocal">40dp</dimen>
-    <dimen name="w_color">100dp</dimen>
+    <dimen name="w_color">120dp</dimen>
     <dimen name="color_c">92dp</dimen>
-    <dimen name="numeros">93dp</dimen>
+    <dimen name="numeros">113dp</dimen>
     <dimen name="h_linear">50dp</dimen>
     <dimen name="l_linear">20dp</dimen>
     <dimen name="r_linear">20dp</dimen>
@@ -33,4 +33,16 @@
     <dimen name="r_perfil">10dp</dimen>
     <dimen name="w_avatar">70dp</dimen>
     <dimen name="h_avatar">120dp</dimen>
+    <dimen name="size_title">25dp</dimen>
+    <dimen name="size_normal">15dp</dimen>
+    <dimen name="top">50dp</dimen>
+    <dimen name="img_siete">180dp</dimen>
+    <dimen name="letra_radio">25sp</dimen>
+    <dimen name="size_rb">25sp</dimen>
+    <dimen name="small_brush">10dp</dimen>
+    <integer name="small_size">10</integer>
+    <dimen name="medium_brush">20dp</dimen>
+    <integer name="medium_size">20</integer>
+    <dimen name="large_brush">30dp</dimen>
+    <integer name="large_size">30</integer>
 </resources>

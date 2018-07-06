@@ -11,6 +11,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -18,8 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.adapters.AdaptadorImagenes;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.nivelcuatro.Nivel4Activity;
+import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveldos.ConcenConsonanActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.Niveles14Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
@@ -28,7 +32,7 @@ import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConcenColoresActivity extends AppCompatActivity {
+public class ConcenColoresActivity extends AppCompatActivity implements View.OnClickListener{
 
     int fondo = R.drawable.img_concentrate;
     int [] listadoImagenes = {
@@ -53,7 +57,7 @@ public class ConcenColoresActivity extends AppCompatActivity {
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView tv_puntos;
-    ImageView icAvatarNiveles;
+    ImageView icAvatarNiveles, imgAyuda;
     TextView tv_title;
     GestorBd db;
 
@@ -71,6 +75,8 @@ public class ConcenColoresActivity extends AppCompatActivity {
         tv_puntos.setTypeface(font);
         tv_title.setTypeface(font);
 
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
         gridView = (GridView) findViewById(R.id.gridImagenes);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -101,6 +107,21 @@ public class ConcenColoresActivity extends AppCompatActivity {
 
         loadPreference();
         cargarTextV();
+        cargarTextV();
+        loadSplash();
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Selecciona las parejas de los colores correspondientes");
+        b.putString("text_dos", "");
+        b.putInt("img_uno", R.drawable.img_concentrate);
+        b.putInt("img_dos", 0);
+        Intent irActivity= new Intent(ConcenColoresActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
     }
     private void cargarTextV() {
         id_user =db.obtenerId(userName);
@@ -139,7 +160,11 @@ public class ConcenColoresActivity extends AppCompatActivity {
         }
     }
 
-    public void irnivelDos(View view) {
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }
     }
 
     private class Validar extends AsyncTask<Void,Void,Void> {

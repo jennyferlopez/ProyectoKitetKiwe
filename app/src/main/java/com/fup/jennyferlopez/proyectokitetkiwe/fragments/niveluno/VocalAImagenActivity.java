@@ -7,30 +7,38 @@ import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveldos.Nivel2Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
+import com.fup.jennyferlopez.proyectokitetkiwe.models.User;
 import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
+import com.fup.jennyferlopez.proyectokitetkiwe.utils.ServicioUsuario;
 
 import java.util.List;
 
-public class VocalAImagenActivity extends AppCompatActivity {
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
+public class VocalAImagenActivity extends AppCompatActivity implements View.OnClickListener {
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView tv_puntos;
-    ImageView icAvatarNiveles;
+    ImageView icAvatarNiveles, imgAyuda;
     TextView tv_title;
-    GestorBd db;
-    ImageView v_na_a, v_na_e, v_na_i, v_na_u, v_as_a, v_as_e, v_as_i, v_as_u, img_tabaco, img_sabila, img_rojo, img_blanco, img_aguacate, img_aguila;
+    ImageView v_na_a, v_na_e, v_na_i, v_na_u, v_as_a, v_as_e, v_as_i, v_as_u, img_conejo, img_sabila, img_rojo, img_blanco, img_aguacate, img_rosado;
 
     private int modificarX=0;
     private int modificary=0;
@@ -43,6 +51,8 @@ public class VocalAImagenActivity extends AppCompatActivity {
     float xj, xj1, yj, yj1, hj,hj1, lj, lj1;
     float temp_x, temp_y;
     int cont_intentos=0, cont_good=0, cont_fail=0, id_user;
+
+    ServicioUsuario servicioUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +66,14 @@ public class VocalAImagenActivity extends AppCompatActivity {
         v_as_e= (ImageView) findViewById(R.id.v_as_e);
         v_as_i= (ImageView) findViewById(R.id.v_as_i);
         v_as_u= (ImageView) findViewById(R.id.v_as_u);
-        img_tabaco= (ImageView) findViewById(R.id.img_conejo);
+        img_conejo= (ImageView) findViewById(R.id.img_conejo);
         img_sabila= (ImageView) findViewById(R.id.img_sabila);
         img_rojo= (ImageView) findViewById(R.id.img_rojo);
         img_blanco= (ImageView) findViewById(R.id.img_blanco);
         img_aguacate= (ImageView) findViewById(R.id.img_aguacate);
-        img_aguila= (ImageView) findViewById(R.id.img_rosado);
+        img_rosado= (ImageView) findViewById(R.id.img_rosado);
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
 
         v_na_a.setOnTouchListener(handlerMover);
         v_na_a.setOnLongClickListener(detect);
@@ -87,7 +99,6 @@ public class VocalAImagenActivity extends AppCompatActivity {
         v_as_u.setOnTouchListener(handlerMover);
         v_as_u.setOnLongClickListener(detect);
 
-        db=new GestorBd(getApplication());
         tv_title = (TextView) findViewById(R.id.tv_title);
         icAvatarNiveles = (ImageView) findViewById(R.id.ic_avatarNiveles);
         tv_puntos = (TextView) findViewById(R.id.tv_puntos);
@@ -96,7 +107,32 @@ public class VocalAImagenActivity extends AppCompatActivity {
         tv_puntos.setTypeface(font);
         tv_title.setTypeface(font);
         loadPreference();
-        cargarTextV();
+        loadSplash();
+        loadRealm();
+        loadPuntos();
+    }
+
+    private void loadRealm() {
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .name("Test1")
+                .schemaVersion(1)
+                .build();
+        Realm.setDefaultConfiguration(realmConfiguration);
+        servicioUsuario = new ServicioUsuario(Realm.getDefaultInstance());
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Con click sostenido arrastra la vocal correspondiente");
+        b.putString("text_dos", "y completa la palabra");
+        b.putInt("img_uno", R.drawable.v_aspinasa_u);
+        b.putInt("img_dos", R.drawable.img_conejo);
+        Intent irActivity= new Intent(VocalAImagenActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
     }
 
     private void loadPreference() {
@@ -120,13 +156,6 @@ public class VocalAImagenActivity extends AppCompatActivity {
             icAvatarNiveles.setBackgroundResource(R.drawable.nina_tres_n);
         }
     }
-    private void cargarTextV() {
-        id_user =db.obtenerId(userName);
-        List<Puntos> pts=db.sumaPuntos(id_user);
-        pts=db.sumaPuntos(id_user);
-        int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-        tv_puntos.setText(""+ p);
-    }
 
     View.OnLongClickListener detect= new View.OnLongClickListener() {
         @Override
@@ -141,10 +170,10 @@ public class VocalAImagenActivity extends AppCompatActivity {
             PointF DownPT= new PointF();
             PointF StartPT= new PointF();
 
-            xi=img_tabaco.getX();
-            yi=img_tabaco.getY();
-            hi=img_tabaco.getWidth();
-            li=img_tabaco.getHeight();
+            xi=img_conejo.getX();
+            yi=img_conejo.getY();
+            hi=img_conejo.getWidth();
+            li=img_conejo.getHeight();
 
             x=img_sabila.getX();
             y=img_sabila.getY();
@@ -166,10 +195,10 @@ public class VocalAImagenActivity extends AppCompatActivity {
             hh=img_aguacate.getWidth();
             lh=img_aguacate.getHeight();
 
-            xj=img_aguila.getX();
-            yj=img_aguila.getY();
-            hj=img_aguila.getWidth();
-            lj=img_aguila.getHeight();
+            xj=img_rosado.getX();
+            yj=img_rosado.getY();
+            hj=img_rosado.getWidth();
+            lj=img_rosado.getHeight();
             int eid= motionEvent.getAction();
 
             switch (eid){
@@ -224,7 +253,6 @@ public class VocalAImagenActivity extends AppCompatActivity {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-
                     switch (v.getId()){
                         case R.id.v_as_a:
                             x1=v.getX();
@@ -237,6 +265,7 @@ public class VocalAImagenActivity extends AppCompatActivity {
                                 v_as_a.setVisibility(View.INVISIBLE);
                                 cont_good=cont_good+1;
                                 cont_intentos=cont_intentos+1;
+                                img_sabila.setBackgroundResource(R.drawable.img_sabilar);
                             }else{
                                 toastFail();
                                 v_as_a.setX(temp_x);
@@ -255,6 +284,7 @@ public class VocalAImagenActivity extends AppCompatActivity {
                                 v_na_a.setVisibility(View.INVISIBLE);
                                 cont_good=cont_good+1;
                                 cont_intentos=cont_intentos+1;
+                                img_conejo.setBackgroundResource(R.drawable.img_conejor);
                             }else{
                                 toastFail();
                                 v_na_a.setX(temp_x);
@@ -273,6 +303,7 @@ public class VocalAImagenActivity extends AppCompatActivity {
                                 v_as_e.setVisibility(View.INVISIBLE);
                                 cont_good=cont_good+1;
                                 cont_intentos=cont_intentos+1;
+                                img_rojo.setBackgroundResource(R.drawable.img_rojor);
                             }else{
                                 toastFail();
                                 v_as_e.setX(temp_x);
@@ -291,6 +322,7 @@ public class VocalAImagenActivity extends AppCompatActivity {
                                 v_as_i.setVisibility(View.INVISIBLE);
                                 cont_good=cont_good+1;
                                 cont_intentos=cont_intentos+1;
+                                img_blanco.setBackgroundResource(R.drawable.img_blancor);
                             }else{
                                 toastFail();
                                 v_as_i.setX(temp_x);
@@ -309,6 +341,8 @@ public class VocalAImagenActivity extends AppCompatActivity {
                                 v_as_u.setVisibility(View.INVISIBLE);
                                 cont_good=cont_good+1;
                                 cont_intentos=cont_intentos+1;
+
+                                img_aguacate.setBackgroundResource(R.drawable.img_aguacater);
                             }else{
                                 toastFail();
                                 v_as_u.setX(temp_x);
@@ -317,27 +351,29 @@ public class VocalAImagenActivity extends AppCompatActivity {
                                 cont_intentos=cont_intentos+1;
                             }
                             break;
-                        case R.id.v_na_u:
+                        case R.id.v_na_e:
                             xj1=v.getX();
                             yj1=v.getY();
                             hj1=v.getWidth();
                             if ((xj>=xj1 && xj<=(xj1+hj1) && yj >= yj1) || ((xj+hj)>=xj1 && xj<=(xj1+hj1) && yj >= yj1 )
                                     || (xj>=xj1 && xj<=(xj1+hj1)) || ((xj+hj)>=xj1 && (xj+hj)<=(xj1+hj1))){
                                 toastSuccess();
-                                v_na_u.setVisibility(View.INVISIBLE);
+                                v_na_e.setVisibility(View.INVISIBLE);
                                 cont_good=cont_good+1;
                                 cont_intentos=cont_intentos+1;
+
+                                img_rosado.setBackgroundResource(R.drawable.img_rosador);
                             }else{
                                 toastFail();
-                                v_na_u.setX(temp_x);
-                                v_na_u.setY(temp_y);
+                                v_na_e.setX(temp_x);
+                                v_na_e.setY(temp_y);
                                 cont_fail=cont_fail+1;
                                 cont_intentos=cont_intentos+1;
                             }
                             break;
-                        case R.id.v_na_e:
-                            v_na_e.setX(temp_x);
-                            v_na_e.setY(temp_y);
+                        case R.id.v_na_u:
+                            v_na_u.setX(temp_x);
+                            v_na_u.setY(temp_y);
                             cont_fail=cont_fail+1;
                             cont_intentos=cont_intentos+1;
                             break;
@@ -361,35 +397,83 @@ public class VocalAImagenActivity extends AppCompatActivity {
         }
         private void cargarPuntos() {
             if (cont_good ==6) {
-                Intent irMenu = new Intent(getApplication(), QuizUnoActivity.class);
+                Intent irMenu = new Intent(getApplication(), QuizNivelUnoActivity.class);
                 startActivity(irMenu);
                 finish();
             }if (cont_good==6 && cont_intentos ==6){
-                Puntos puntos= new Puntos(id_user, 3);
-                db.insertarPuntos(puntos);
-                List<Puntos> pts=db.sumaPuntos(id_user);
-                int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-                tv_puntos.setText(""+ p);
+                SumarPuntos(3);
+                puntosGanados(3);
             }else if (cont_good==6&& (cont_intentos >6 || cont_intentos <9)){
-                id_user =db.obtenerId(userName);
-                Puntos puntos= new Puntos(id_user, 2);
-                db.insertarPuntos(puntos);
-                List<Puntos> pts=db.sumaPuntos(id_user);
-                int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-                tv_puntos.setText(""+ p);
+                SumarPuntos(2);
+                puntosGanados(2);
             }else if (cont_good==6 && (cont_intentos >=9 || cont_intentos <=12)){
-                id_user =db.obtenerId(userName);
-                Puntos puntos= new Puntos(id_user, 1);
-                db.insertarPuntos(puntos);
-                List<Puntos> pts=db.sumaPuntos(id_user);
-                int p=Integer.parseInt(String.valueOf(pts.get(0).getPuntos()));
-                tv_puntos.setText(""+ p);
+                SumarPuntos(1);
+                puntosGanados(1);
             }else if (cont_good<4 && cont_intentos >12){
-               // toastWarning();
+                 toastWarning();
             }
         }
 };
-        private void toastFail() {
+
+    private void loadPuntos() {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+            servicioUsuario.actualizaractivity(usuario_por_id,"VocalesColiActivity");
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p);
+        }
+    }
+    private void SumarPuntos(int puntos) {
+        userName =preferences.getString(Preference.USER_NAME, "");
+        User usuario_por_id = servicioUsuario.obtenerUsuarioPorId(userName);
+        if (usuario_por_id!=null) {
+
+            int p=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+
+            servicioUsuario.actualizarPuntos(usuario_por_id,puntos+p);
+            int p1=Integer.parseInt(String.valueOf(usuario_por_id.getPuntos()));
+            tv_puntos.setText(""+ p1);
+        }
+    }
+    private void puntosGanados(int puntos) {
+        Toast toasta = new Toast(getApplicationContext());
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_personalizado,
+                (ViewGroup) findViewById(R.id.lytLayout));
+
+        TextView txtMsg = (TextView)layout.findViewById(R.id.tvMsjToast);
+        ImageView imgToast =(ImageView) layout.findViewById(R.id.imgToast);
+        imgToast.setBackgroundResource(R.drawable.ic_oros);
+        txtMsg.setText("Ganaste "+ puntos +" semillas");
+        String font_url ="font/dklemonyellowsun.otf";
+        Typeface font = Typeface.createFromAsset(this.getResources().getAssets(), font_url);
+        txtMsg.setTypeface(font);
+        toasta.setDuration(Toast.LENGTH_SHORT);
+        toasta.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0,0);
+        toasta.setView(layout);
+        toasta.show();
+    }
+    private void toastWarning() {
+        Toast toasta = new Toast(getApplicationContext());
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_personalizado,
+                (ViewGroup) findViewById(R.id.lytLayout));
+
+        TextView txtMsg = (TextView)layout.findViewById(R.id.tvMsjToast);
+        ImageView imgToast =(ImageView) layout.findViewById(R.id.imgToast);
+        imgToast.setBackgroundResource(R.drawable.toast_warning);
+        txtMsg.setText("te recomendamos volver al nivel de reconocimiento tienes "+ cont_intentos +" fallidos");
+        String font_url ="font/dklemonyellowsun.otf";
+        Typeface font = Typeface.createFromAsset(getApplication().getResources().getAssets(), font_url);
+        txtMsg.setTypeface(font);
+        toasta.setDuration(Toast.LENGTH_SHORT);
+        toasta.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0,0);
+        toasta.setView(layout);
+        toasta.show();
+
+    }
+    private void toastFail() {
             Toast toasta = new Toast(getApplicationContext());
             LayoutInflater inflater = getLayoutInflater();
             View layout = inflater.inflate(R.layout.toast_personalizado,
@@ -426,4 +510,10 @@ public class VocalAImagenActivity extends AppCompatActivity {
 
         }
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }
     }
+}

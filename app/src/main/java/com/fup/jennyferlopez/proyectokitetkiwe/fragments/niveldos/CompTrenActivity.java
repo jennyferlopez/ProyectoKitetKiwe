@@ -10,12 +10,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveltres.ColorCorres3Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
@@ -28,7 +31,7 @@ public class CompTrenActivity extends AppCompatActivity implements View.OnClickL
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView tv_puntos;
-    ImageView icAvatarNiveles, imgToast, img_t, img_th, img_tx, img_txh, img_huevo;
+    ImageView icAvatarNiveles, imgToast, img_t, img_th, img_tx, img_txh, img_huevo, imgAyuda;
     TextView tv_title;
     int id_user;
     GestorBd db;
@@ -46,6 +49,9 @@ public class CompTrenActivity extends AppCompatActivity implements View.OnClickL
         img_txh = (ImageView) findViewById(R.id.img_txh2);
         img_huevo = (ImageView) findViewById(R.id.img_huevoCol);
         tv_puntos = (TextView) findViewById(R.id.tv_puntos);
+
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
         String font_url ="font/dklemonyellowsun.otf";
         Typeface font = Typeface.createFromAsset(this.getResources().getAssets(), font_url);
         tv_puntos.setTypeface(font);
@@ -59,6 +65,21 @@ public class CompTrenActivity extends AppCompatActivity implements View.OnClickL
         loadPreference();
         cargarTextV();
         toastInstruccion();
+
+        loadSplash();
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Selecciona la consonante basica faltante");
+        b.putString("text_dos", "correspondiente para completar los huevitos");
+        b.putInt("img_uno", R.drawable.img_th2);
+        b.putInt("img_dos", R.drawable.img_huevos_uno);
+        Intent irActivity= new Intent(CompTrenActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
     }
 
 
@@ -132,7 +153,9 @@ public class CompTrenActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         int id=v.getId();
-        if (id==R.id.img_t2){
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }else if (id==R.id.img_t2){
             img_huevo.setBackgroundResource(R.drawable.huevo_t);
             Thread timerThread = new Thread(){
                 public void run(){

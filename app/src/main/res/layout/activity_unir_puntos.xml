@@ -62,10 +62,22 @@
 
         </RelativeLayout>
 
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.07"/>
+            android:layout_weight="0.07">
+
+            <ImageView
+                android:id="@+id/img_ayuda"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
+                android:src="@drawable/ayuda" />
+        </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -144,7 +156,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_height="70dp"
                 android:id="@+id/img_8"
-                android:background="@drawable/txt_naranja" />
+                android:background="@drawable/num_taw" />
             <ImageView
                 android:layout_width="@dimen/color_c"
                 android:layout_gravity="center_horizontal"
@@ -157,7 +169,12 @@
                 android:layout_height="70dp"
                 android:id="@+id/img_6"
                 android:background="@drawable/txt_seis" />
-
+            <ImageView
+                android:layout_width="@dimen/color_c"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="70dp"
+                android:id="@+id/img_cuatro"
+                android:background="@drawable/txt_cuatro" />
             <ImageView
                 android:layout_width="@dimen/color_c"
                 android:layout_gravity="center_horizontal"

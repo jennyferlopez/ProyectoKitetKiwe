@@ -23,11 +23,15 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
+import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveltres.ColorCorresActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.Niveles12Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
@@ -35,12 +39,12 @@ import com.fup.jennyferlopez.proyectokitetkiwe.utils.Preference;
 
 import java.util.List;
 
-public class UnirNumerosUnoActivity extends AppCompatActivity  {
+public class UnirNumerosUnoActivity extends AppCompatActivity  implements View.OnClickListener {
 
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView tv_puntos;
-    ImageView icAvatarNiveles, img_dos, txt_dos, img_cuatro, txt_cuatro, img_siete, txt_siete, img_uno, txt_uno, img_nueve, txt_nueve;
+    ImageView icAvatarNiveles, img_dos, txt_dos, img_cuatro, txt_cuatro, img_siete, txt_siete, img_uno, txt_uno, img_nueve, txt_nueve,imgAyuda;
     TextView tv_title;
     GestorBd db;
     private int modificarX=0;
@@ -94,9 +98,24 @@ public class UnirNumerosUnoActivity extends AppCompatActivity  {
         tv_puntos.setTypeface(font);
         tv_title.setTypeface(font);
 
-
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
         loadPreference();
         cargarTextV();
+        loadSplash();
+    }
+
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Une con una linea la palabra ");
+        b.putString("text_dos", "con el numero correspondiente");
+        b.putInt("img_uno", R.drawable.txt_siete);
+        b.putInt("img_dos", R.drawable.img_uno);
+        Intent irActivity= new Intent(UnirNumerosUnoActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
     }
 
 
@@ -435,5 +454,12 @@ public class UnirNumerosUnoActivity extends AppCompatActivity  {
     public void irCuatroDos(View view) {
         Intent irCuatroDos=new Intent(this,Nivel42Activity.class);
         startActivity(irCuatroDos);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }
     }
 }

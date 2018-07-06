@@ -13,11 +13,15 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fup.jennyferlopez.proyectokitetkiwe.R;
+import com.fup.jennyferlopez.proyectokitetkiwe.activities.SplashTodosActivity;
+import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveldos.CompTrenActivity;
 import com.fup.jennyferlopez.proyectokitetkiwe.fragments.niveluno.Niveles12Activity;
 import com.fup.jennyferlopez.proyectokitetkiwe.gestorbd.GestorBd;
 import com.fup.jennyferlopez.proyectokitetkiwe.models.Puntos;
@@ -30,7 +34,7 @@ public class ColiColoresActivity extends AppCompatActivity implements View.OnCli
     SharedPreferences preferences;
     String avatarSeleccionado, userName;
     TextView tv_puntos;
-    ImageView icAvatarNiveles;
+    ImageView icAvatarNiveles, imgAyuda;
     TextView tv_title;
     private int modificarX=0;
     private int modificary=0;
@@ -79,7 +83,8 @@ public class ColiColoresActivity extends AppCompatActivity implements View.OnCli
         img_u.setOnTouchListener(handlerMover);
         img_u.setOnLongClickListener(detect);
 
-
+        imgAyuda = (ImageView) findViewById(R.id.img_ayuda);
+        imgAyuda.setOnClickListener(this);
         tv_title = (TextView) findViewById(R.id.tv_title);
         icAvatarNiveles = (ImageView) findViewById(R.id.ic_avatarNiveles);
         tv_puntos = (TextView) findViewById(R.id.tv_puntos);
@@ -89,10 +94,21 @@ public class ColiColoresActivity extends AppCompatActivity implements View.OnCli
         tv_title.setTypeface(font);
         loadPreference();
         cargarTextV();
+        loadSplash();
     }
 
-
-
+    private void loadSplash() {
+        final Animation zoomAnimation = AnimationUtils.loadAnimation(this, R.anim.zoom);
+        imgAyuda.startAnimation(zoomAnimation);
+        Bundle b= new Bundle();
+        b.putString("text_uno", "Arrastra con click sostenido la palabra");
+        b.putString("text_dos", "al color correspondiente");
+        b.putInt("img_uno", R.drawable.txt_rojo);
+        b.putInt("img_dos", R.drawable.img_cnegro);
+        Intent irActivity= new Intent(ColiColoresActivity.this, SplashTodosActivity.class);
+        irActivity.putExtras(b);
+        startActivity(irActivity);
+    }
     private void loadPreference() {
         preferences = getSharedPreferences(Preference.PREFERENCE_NAME, Activity.MODE_PRIVATE);
         avatarSeleccionado = preferences.getString(Preference.AVATAR_SEECCIONADO, "");
@@ -391,7 +407,9 @@ public class ColiColoresActivity extends AppCompatActivity implements View.OnCli
     }
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.ns_col_a) {
+        if (v.getId() == R.id.img_ayuda) {
+            loadSplash();
+        }else if (v.getId() == R.id.ns_col_a) {
             MediaPlayer mp = MediaPlayer.create(this, R.raw.blanco);
             mp.start();
         }else if (v.getId() == R.id.ns_col_e) {
@@ -403,6 +421,9 @@ public class ColiColoresActivity extends AppCompatActivity implements View.OnCli
         }else if (v.getId() == R.id.ns_col_u) {
             MediaPlayer mp = MediaPlayer.create(this, R.raw.negro);
             mp.start();
+        }else if (v.getId()== R.id.correAvatar){
+            Intent ircolores= new Intent(getApplication(), ColiColoresActivity.class);
+            startActivity(ircolores);
         }
     }
 }
